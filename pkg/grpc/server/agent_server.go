@@ -14,11 +14,11 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/grpc/pb"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/grpc/pb"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // contextKey is a custom type for context keys to avoid collisions

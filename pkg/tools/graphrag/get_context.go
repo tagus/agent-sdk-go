@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	gr "github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	gr "github.com/tagus/agent-sdk-go/pkg/graphrag"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // GetContextTool retrieves context around an entity via graph traversal.

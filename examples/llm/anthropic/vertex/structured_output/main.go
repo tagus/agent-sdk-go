@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/structuredoutput"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/structuredoutput"
 )
 
 // ResearchPaper represents a structured research paper analysis

@@ -117,10 +117,10 @@ release:
 
     ### Go Library
     ```bash
-    go get github.com/Ingenimax/agent-sdk-go@{{ .Tag }}
+    go get github.com/tagus/agent-sdk-go@{{ .Tag }}
     ```
 
-    **Full Changelog**: https://github.com/Ingenimax/agent-sdk-go/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/tagus/agent-sdk-go/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 # Note: Homebrew formula disabled for now
 # brews:
@@ -128,7 +128,7 @@ release:
 #     repository:
 #       owner: Ingenimax
 #       name: agent-sdk-go
-#     homepage: https://github.com/Ingenimax/agent-sdk-go
+#     homepage: https://github.com/tagus/agent-sdk-go
 #     description: A powerful Go framework for building production-ready AI agents
 #     license: MIT
 #     test: |

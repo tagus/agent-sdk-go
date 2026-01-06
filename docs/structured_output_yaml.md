@@ -141,8 +141,8 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {

@@ -20,7 +20,7 @@ The unified configuration loader provides a centralized approach to agent config
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+    "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 )
 
 func main() {
@@ -494,8 +494,8 @@ import (
     "log"
     "time"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 )
 
 func main() {

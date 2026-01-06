@@ -3,7 +3,7 @@ package tracing
 import (
 	"context"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // StartRequestTracing starts a trace session for a request and returns the updated context

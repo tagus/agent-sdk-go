@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 	"github.com/google/go-github/v45/github"
 	"golang.org/x/oauth2"
 )

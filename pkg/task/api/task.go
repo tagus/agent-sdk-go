@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/core"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/executor"
+	"github.com/tagus/agent-sdk-go/pkg/task/core"
+	"github.com/tagus/agent-sdk-go/pkg/task/executor"
 )
 
 // TaskAPI provides a way to execute tasks over an API

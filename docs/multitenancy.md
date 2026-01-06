@@ -29,7 +29,7 @@ To specify which organization's resources to use, add the organization ID to the
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create a context with an organization ID
@@ -122,11 +122,11 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 func main() {

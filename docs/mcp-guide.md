@@ -38,8 +38,8 @@ package main
 
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {
@@ -79,7 +79,7 @@ myAgent, err := agent.NewAgent(
 ### 3. Using Builder Pattern
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+import "github.com/tagus/agent-sdk-go/pkg/mcp"
 
 // Create MCP configuration using builder
 builder := mcp.NewBuilder().
@@ -161,7 +161,7 @@ The SDK includes presets for common MCP servers:
 #### List Available Presets
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+import "github.com/tagus/agent-sdk-go/pkg/mcp"
 
 presets := mcp.ListPresets()
 for _, preset := range presets {
@@ -287,7 +287,7 @@ The SDK provides structured error handling with detailed error classification:
 ### Handling Errors
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+import "github.com/tagus/agent-sdk-go/pkg/mcp"
 
 response, err := myAgent.Run(ctx, "some query")
 if err != nil {
@@ -519,7 +519,7 @@ if err == nil && len(servers) > 0 {
 Enable detailed logging for troubleshooting:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/logging"
+import "github.com/tagus/agent-sdk-go/pkg/logging"
 
 // Create logger with debug level
 logger := logging.New().WithLevel("debug")

@@ -48,8 +48,8 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/mcp"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 func main() {

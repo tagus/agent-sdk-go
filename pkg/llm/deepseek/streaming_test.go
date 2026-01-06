@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // TestGenerateStream tests the basic streaming functionality

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 	"gopkg.in/yaml.v3"
 )
 

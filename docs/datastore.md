@@ -35,8 +35,8 @@ go get github.com/lib/pq
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/datastore/postgres"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/datastore/postgres"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create a PostgreSQL client
@@ -115,8 +115,8 @@ go get github.com/lib/pq
 import (
     "database/sql"
     _ "github.com/lib/pq"
-    "github.com/Ingenimax/agent-sdk-go/pkg/datastore/supabase"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/datastore/supabase"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Connect to database for transaction support
@@ -278,7 +278,7 @@ for _, doc := range docs {
 ### Query with Limit
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 docs, err := collection.Query(ctx,
     map[string]interface{}{"status": "active"},

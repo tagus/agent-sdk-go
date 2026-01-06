@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/embedding"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/embedding"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // MockEmbedder implements a simple mock for testing

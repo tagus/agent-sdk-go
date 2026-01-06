@@ -3,8 +3,8 @@ package agent
 import (
 	"context"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	graphragtools "github.com/Ingenimax/agent-sdk-go/pkg/tools/graphrag"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	graphragtools "github.com/tagus/agent-sdk-go/pkg/tools/graphrag"
 )
 
 // WithGraphRAG adds GraphRAG capabilities to the agent.

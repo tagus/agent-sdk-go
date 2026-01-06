@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/agentconfig"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 func main() {

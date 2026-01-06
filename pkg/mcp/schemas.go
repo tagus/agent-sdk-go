@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 // SchemaValidator handles validation of tool outputs against their schemas

@@ -7,13 +7,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/azureopenai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/ollama"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/vllm"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/llm/azureopenai"
+	"github.com/tagus/agent-sdk-go/pkg/llm/deepseek"
+	"github.com/tagus/agent-sdk-go/pkg/llm/ollama"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/llm/vllm"
 )
 
 // createLLMFromConfig creates an LLM client from YAML configuration

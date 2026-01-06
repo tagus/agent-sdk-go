@@ -23,8 +23,8 @@ go get github.com/lib/pq
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/datastore/postgres"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/datastore/postgres"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create a new PostgreSQL client
@@ -90,7 +90,7 @@ err = collection.Delete(ctx, id)
 ### Query Operations
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 // Query with filter
 docs, err := collection.Query(ctx, map[string]interface{}{

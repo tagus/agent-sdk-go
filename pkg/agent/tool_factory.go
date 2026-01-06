@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/tools/calculator"
 )
 
 // ToolFactory creates tools from YAML configuration

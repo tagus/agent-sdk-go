@@ -15,7 +15,7 @@ This document provides detailed information for developers contributing to the A
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Ingenimax/agent-sdk-go.git
+   git clone https://github.com/tagus/agent-sdk-go.git
    cd agent-sdk-go
    ```
 
@@ -115,7 +115,7 @@ go test ./...
 go test -cover ./...
 
 # Run tests for a specific package
-go test github.com/Ingenimax/agent-sdk-go/pkg/agent
+go test github.com/tagus/agent-sdk-go/pkg/agent
 ```
 
 ## Documentation

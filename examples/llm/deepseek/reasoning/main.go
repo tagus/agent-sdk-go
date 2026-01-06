@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/deepseek"
 )
 
 func main() {

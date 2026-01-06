@@ -11,12 +11,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/microservice"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/microservice"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func main() {

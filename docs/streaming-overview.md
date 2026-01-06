@@ -92,7 +92,7 @@ for event := range events {
 
 #### Raw Event Channel Approach
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/grpc/client"
+import "github.com/tagus/agent-sdk-go/pkg/grpc/client"
 
 // Create remote agent client
 remoteClient := client.NewRemoteAgentClient(client.RemoteAgentConfig{
@@ -134,7 +134,7 @@ for event := range events {
 
 #### Fluent Handler API Approach (Recommended)
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/grpc/client"
+import "github.com/tagus/agent-sdk-go/pkg/grpc/client"
 
 // Create remote agent client
 remoteClient := client.NewRemoteAgentClient(client.RemoteAgentConfig{

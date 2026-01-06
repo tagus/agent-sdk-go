@@ -14,8 +14,8 @@ Tracing provides observability into the behavior of your agents, allowing you to
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -43,8 +43,8 @@ tracer := langfuseTracer.AsInterfaceTracer()
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -67,8 +67,8 @@ To use tracing with an agent, pass it to the `WithTracer` option:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 // Create Langfuse tracer
@@ -101,7 +101,7 @@ You can also use the tracer directly for manual instrumentation:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // Start a trace
@@ -126,8 +126,8 @@ The Agent SDK provides unified tracing middleware that works with any tracer imp
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // Create LLM client
@@ -147,8 +147,8 @@ agent, err := agent.NewAgent(
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create memory store
@@ -220,8 +220,8 @@ You can also manually trace LLM calls:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm"
 )
 
 // Start a trace for the LLM call
@@ -258,7 +258,7 @@ You can also manually trace tool calls:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // Start a trace for the tool call
@@ -286,7 +286,7 @@ When using tracing with multi-tenancy, you can include the organization ID in th
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create context with organization ID
@@ -321,7 +321,7 @@ You can implement custom tracers by implementing the `interfaces.Tracer` interfa
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // CustomTracer is a custom tracer implementation
@@ -376,12 +376,12 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/tracing"
+    "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func main() {

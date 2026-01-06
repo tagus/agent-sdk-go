@@ -42,7 +42,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
 )
 
 func main() {
@@ -93,7 +93,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
 )
 
 func main() {

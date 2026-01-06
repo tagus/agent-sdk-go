@@ -29,7 +29,7 @@ Use this approach for production environments where the config server is authori
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+    "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 )
 
 func main() {
@@ -814,7 +814,7 @@ import (
     "log"
     "time"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+    "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 )
 
 func main() {

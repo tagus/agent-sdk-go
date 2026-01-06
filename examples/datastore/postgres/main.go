@@ -9,9 +9,9 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/datastore/postgres"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/datastore/postgres"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 func createTable(db *sql.DB) error {

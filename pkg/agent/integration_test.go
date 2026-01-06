@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/tools/calculator"
 )
 
 func TestSubAgentsIntegration(t *testing.T) {

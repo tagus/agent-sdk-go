@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
 )
 
 // Simple in-memory cache for agent configurations

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // ConversationSummary implements a memory that summarizes old messages

@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )

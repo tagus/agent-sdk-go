@@ -29,8 +29,8 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/ollama"
-    "github.com/Ingenimax/agent-sdk-go/pkg/logging"
+    "github.com/tagus/agent-sdk-go/pkg/llm/ollama"
+    "github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 func main() {

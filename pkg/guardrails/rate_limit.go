@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // RateLimit implements a guardrail that limits the rate of requests

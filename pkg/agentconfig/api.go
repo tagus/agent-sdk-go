@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
 )
 
 // LoadAgentFromRemote is a convenience function that loads and creates an agent from remote config

@@ -17,7 +17,7 @@ The MCP integration allows agents to:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+    "github.com/tagus/agent-sdk-go/pkg/mcp"
 )
 
 // Create an HTTP-based MCP server client
@@ -42,11 +42,11 @@ if err != nil {
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/mcp"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create MCP servers

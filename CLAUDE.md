@@ -50,8 +50,8 @@ Headless SDK with interactive chat, task execution, and MCP server management.
 
 ## Go Version and Dependencies
 
-- Requires Go 1.24+
-- Uses module `github.com/Ingenimax/agent-sdk-go`
+- Requires Go 1.23+
+- Uses module `github.com/tagus/agent-sdk-go`
 - Key dependencies: OpenAI/Anthropic/Google clients, Redis, Weaviate, OpenTelemetry
 
 ## Environment Configuration

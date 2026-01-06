@@ -170,7 +170,7 @@ echo $OPENAI_API_KEY
 Enable debug logging for detailed troubleshooting:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/logging"
+import "github.com/tagus/agent-sdk-go/pkg/logging"
 
 logger := logging.New().WithLevel("debug")
 // Use logger in your MCP configuration

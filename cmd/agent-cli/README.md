@@ -19,7 +19,7 @@ A powerful command-line interface for the Agent SDK Go framework that provides h
 
 ```bash
 # Clone the repository
-git clone https://github.com/Ingenimax/agent-sdk-go
+git clone https://github.com/tagus/agent-sdk-go
 cd agent-sdk-go
 
 # Build the CLI tool
@@ -668,5 +668,5 @@ This project is licensed under the MIT License - see the [LICENSE](../../LICENSE
 
 For support and questions:
 - 📖 Documentation: [Agent SDK Docs](../../docs/)
-- 🐛 Issues: [GitHub Issues](https://github.com/Ingenimax/agent-sdk-go/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/Ingenimax/agent-sdk-go/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/tagus/agent-sdk-go/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/tagus/agent-sdk-go/discussions)

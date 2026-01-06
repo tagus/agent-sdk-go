@@ -10,7 +10,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+	"github.com/tagus/agent-sdk-go/pkg/mcp"
 )
 
 // MCPServerConfig represents a single MCP server configuration

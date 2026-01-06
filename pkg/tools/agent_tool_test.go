@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // MockSubAgent is a mock implementation of the SubAgent interface

@@ -89,7 +89,7 @@ To use the tracing configuration in your own application:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/cmd/examples/tracing"
+    "github.com/tagus/agent-sdk-go/cmd/examples/tracing"
 )
 
 func main() {

@@ -12,8 +12,8 @@ The Agent SDK supports multiple LLM providers, including OpenAI and Anthropic. E
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -34,8 +34,8 @@ client = openai.NewClient(
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -76,7 +76,7 @@ Generate a response to a conversation:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm"
+    "github.com/tagus/agent-sdk-go/pkg/llm"
 )
 
 // Create messages
@@ -106,8 +106,8 @@ Generate a response that can use tools:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 // Create tools

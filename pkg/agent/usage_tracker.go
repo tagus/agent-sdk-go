@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 type contextKey string

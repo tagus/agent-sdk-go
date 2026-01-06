@@ -33,8 +33,8 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/vllm"
-    "github.com/Ingenimax/agent-sdk-go/pkg/logging"
+    "github.com/tagus/agent-sdk-go/pkg/llm/vllm"
+    "github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 func main() {

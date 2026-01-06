@@ -12,8 +12,8 @@ Vector stores are used to store and retrieve vector embeddings, which are numeri
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/vectorstore/weaviate"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -31,8 +31,8 @@ store := weaviate.New(
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/vectorstore/pinecone"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/vectorstore/pinecone"
+    "github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // Get configuration
@@ -55,7 +55,7 @@ Add documents to the vector store:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // Create documents
@@ -186,7 +186,7 @@ When using vector stores with multi-tenancy, you can specify the organization ID
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create context with organization ID
@@ -207,7 +207,7 @@ You can implement custom vector stores by implementing the `interfaces.VectorSto
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // CustomVectorStore is a custom vector store implementation
@@ -280,10 +280,10 @@ Vector stores typically work with embedding models to convert text to vectors:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/embedding"
-    "github.com/Ingenimax/agent-sdk-go/pkg/embedding/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/vectorstore/weaviate"
+    "github.com/tagus/agent-sdk-go/pkg/embedding"
+    "github.com/tagus/agent-sdk-go/pkg/embedding/openai"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
 )
 
 // Create embedding model
@@ -313,10 +313,10 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/embedding/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/vectorstore/weaviate"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/embedding/openai"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
 )
 
 func main() {

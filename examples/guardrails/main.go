@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/guardrails"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	"github.com/tagus/agent-sdk-go/pkg/guardrails"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func main() {

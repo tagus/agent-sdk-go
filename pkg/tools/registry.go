@@ -3,7 +3,7 @@ package tools
 import (
 	"sync"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // Registry implements the ToolRegistry interface

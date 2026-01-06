@@ -11,7 +11,7 @@ import (
 
 	"encoding/json"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
 )
 
 // ResearchResult matches the schema defined in the YAML response_format

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func TestWebSearch(t *testing.T) {

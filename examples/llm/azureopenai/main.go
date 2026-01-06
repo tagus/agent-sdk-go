@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/azureopenai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm"
+	"github.com/tagus/agent-sdk-go/pkg/llm/azureopenai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 // isReasoningModel returns true if the model is a reasoning model (o1, o3, etc.)

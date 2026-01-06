@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/task"
 	"github.com/google/uuid"
 )
 

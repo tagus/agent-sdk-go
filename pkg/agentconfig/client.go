@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/config"
 )
 
 // ConfigurationClient handles fetching configurations from the StarOps config service

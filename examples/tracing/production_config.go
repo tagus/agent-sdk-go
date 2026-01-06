@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tracing"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 func setupProductionTracing(logger logging.Logger, ctx context.Context) (*tracing.LangfuseTracer, *tracing.OTelTracer, error) {

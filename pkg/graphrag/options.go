@@ -1,6 +1,6 @@
 package graphrag
 
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 // Re-export option functions from interfaces for convenience
 

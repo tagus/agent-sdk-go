@@ -21,8 +21,8 @@ The `WithDescription()` option is crucial for sub-agents. It provides the contex
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // Create specialized sub-agents

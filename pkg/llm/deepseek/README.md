@@ -43,7 +43,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
+    "github.com/tagus/agent-sdk-go/pkg/llm/deepseek"
 )
 
 func main() {
@@ -83,7 +83,7 @@ fmt.Printf("Total Tokens: %d\n", response.Usage.TotalTokens)
 ### With Configuration Options
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 client := deepseek.NewClient(
     apiKey,
@@ -112,8 +112,8 @@ import (
     "encoding/json"
     "fmt"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm/deepseek"
 )
 
 // Define a simple tool
@@ -175,7 +175,7 @@ func main() {
 ## Memory/Conversation Management
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+import "github.com/tagus/agent-sdk-go/pkg/memory"
 
 // Create conversation buffer
 mem := memory.NewConversationBuffer()
@@ -227,7 +227,7 @@ llm:
 ### Programmatic Usage
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/agent"
+import "github.com/tagus/agent-sdk-go/pkg/agent"
 
 // Create agent with DeepSeek
 agentInstance := agent.New(

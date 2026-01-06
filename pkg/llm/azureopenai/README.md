@@ -30,7 +30,7 @@ Before using this client, you need:
 ### Creating a Client
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/llm/azureopenai"
+import "github.com/tagus/agent-sdk-go/pkg/llm/azureopenai"
 
 // Option 1: Using Base URL (traditional approach)
 client := azureopenai.NewClient(
@@ -78,7 +78,7 @@ fmt.Println(response)
 ### Chat Completion
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/llm"
+import "github.com/tagus/agent-sdk-go/pkg/llm"
 
 messages := []llm.Message{
     {
@@ -101,7 +101,7 @@ fmt.Println(response)
 ### Tool Integration
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 // Define your tools
 tools := []interfaces.Tool{
@@ -252,7 +252,7 @@ The client provides comprehensive error handling:
 The client supports memory integration for conversation history:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+import "github.com/tagus/agent-sdk-go/pkg/memory"
 
 mem := memory.NewConversationBuffer(10) // Keep last 10 messages
 
@@ -268,7 +268,7 @@ response, err := client.Generate(
 Tool calls are automatically traced when using the tracing package:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tracing"
+import "github.com/tagus/agent-sdk-go/pkg/tracing"
 
 // Tool calls will be automatically added to the tracing context
 response, err := client.GenerateWithTools(ctx, prompt, tools)

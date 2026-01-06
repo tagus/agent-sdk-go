@@ -9,11 +9,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/graphrag/weaviate"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/graphrag/weaviate"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 func main() {

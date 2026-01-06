@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/grpc/pb"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/grpc/pb"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // mockStreamServer implements the streaming server for testing

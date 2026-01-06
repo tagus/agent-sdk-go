@@ -78,9 +78,9 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {
@@ -163,7 +163,7 @@ eventChan, _ := mainAgent.RunStream(ctx, "Complex task")
 You can also manually add a stream forwarder when calling tools:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools"
+import "github.com/tagus/agent-sdk-go/pkg/tools"
 
 // Create a forwarder
 forwarder := func(event interfaces.AgentStreamEvent) {

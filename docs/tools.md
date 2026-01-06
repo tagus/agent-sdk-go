@@ -15,7 +15,7 @@ The Agent SDK comes with several built-in tools:
 Allows the agent to search the web for information:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+import "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 
 searchTool := websearch.New(
     googleAPIKey,
@@ -28,7 +28,7 @@ searchTool := websearch.New(
 Allows the agent to perform mathematical calculations:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
+import "github.com/tagus/agent-sdk-go/pkg/tools/calculator"
 
 calculatorTool := calculator.New()
 ```
@@ -38,7 +38,7 @@ calculatorTool := calculator.New()
 Allows the agent to interact with AWS services:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools/aws"
+import "github.com/tagus/agent-sdk-go/pkg/tools/aws"
 
 // EC2 tool
 ec2Tool := aws.NewEC2Tool()
@@ -52,7 +52,7 @@ s3Tool := aws.NewS3Tool()
 Allows the agent to interact with Kubernetes clusters:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools/kubernetes"
+import "github.com/tagus/agent-sdk-go/pkg/tools/kubernetes"
 
 kubeTool := kubernetes.New()
 ```
@@ -63,9 +63,9 @@ To use tools with an agent, pass them to the `WithTools` option:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
+    "github.com/tagus/agent-sdk-go/pkg/tools/calculator"
 )
 
 // Create tools
@@ -87,7 +87,7 @@ You can create custom tools by implementing the `interfaces.Tool` interface:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // WeatherTool is a custom tool for getting weather information
@@ -150,7 +150,7 @@ func (t *WeatherTool) Execute(ctx context.Context, args string) (string, error) 
 The Tool Registry manages a collection of tools:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools"
+import "github.com/tagus/agent-sdk-go/pkg/tools"
 
 // Create a tool registry
 registry := tools.NewRegistry()
@@ -175,7 +175,7 @@ allTools := registry.List()
 The Agent SDK provides a flexible way to execute tools:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/tools"
+import "github.com/tagus/agent-sdk-go/pkg/tools"
 
 // Create a tool executor
 executor := tools.NewExecutor(registry)
@@ -264,13 +264,13 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/tools"
+    "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
+    "github.com/tagus/agent-sdk-go/pkg/tools/calculator"
 )
 
 func main() {

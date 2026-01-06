@@ -26,8 +26,8 @@ To use guardrails with an agent, pass them to the `WithGuardrails` option:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/guardrails"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/guardrails"
 )
 
 // Create guardrails
@@ -189,7 +189,7 @@ You can also use guardrails programmatically:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/guardrails"
+    "github.com/tagus/agent-sdk-go/pkg/guardrails"
 )
 
 // Create guardrails
@@ -231,8 +231,8 @@ When using guardrails with multi-tenancy, you can have different guardrails for 
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/guardrails"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/guardrails"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create guardrails for different organizations
@@ -266,7 +266,7 @@ You can implement custom guardrails by implementing the `interfaces.Guardrails` 
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // CustomGuardrails is a custom guardrails implementation
@@ -318,11 +318,11 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/guardrails"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/guardrails"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 func main() {

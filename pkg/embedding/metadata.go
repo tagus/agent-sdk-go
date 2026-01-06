@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // MetadataFilter represents a filter condition for document metadata.

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
-	"github.com/Ingenimax/agent-sdk-go/pkg/embedding"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/vectorstore/weaviate"
+	"github.com/tagus/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/embedding"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
 	"github.com/google/uuid"
 )
 

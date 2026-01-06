@@ -5,10 +5,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/retry"
+	"github.com/tagus/agent-sdk-go/pkg/llm"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/retry"
 )
 
 func main() {

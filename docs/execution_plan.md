@@ -198,9 +198,9 @@ import (
     "context"
     "fmt"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/executionplan"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/executionplan"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {

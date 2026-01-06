@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // Generator handles generation of execution plans

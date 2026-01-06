@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/context"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/context"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
 )
 
 func TestAgentContext(t *testing.T) {

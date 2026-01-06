@@ -1,4 +1,4 @@
-module github.com/Ingenimax/agent-sdk-go
+module github.com/tagus/agent-sdk-go
 
 go 1.23.8
 

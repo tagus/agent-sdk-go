@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 func TestParseSSELine(t *testing.T) {

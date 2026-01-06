@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/graphrag"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // SearchTool implements graph-based search in the knowledge graph.

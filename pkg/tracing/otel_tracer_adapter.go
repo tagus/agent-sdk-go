@@ -3,7 +3,7 @@ package tracing
 import (
 	"context"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // OTELTracerAdapter adapts OTELLangfuseTracer to implement interfaces.Tracer

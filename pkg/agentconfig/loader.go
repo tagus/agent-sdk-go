@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/config"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )

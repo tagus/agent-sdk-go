@@ -57,7 +57,7 @@ The configuration system works by:
 The simplest approach - reads `AGENT_DEPLOYMENT_ID` and `ENVIRONMENT` automatically:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+import "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 
 config, err := agentconfig.LoadFromEnvironment(ctx)
 if err != nil {
@@ -74,7 +74,7 @@ dbHost := config["DATABASE_HOST"]
 For more control, create a client and specify parameters explicitly:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
+import "github.com/tagus/agent-sdk-go/pkg/agentconfig"
 
 client, err := agentconfig.NewClient()
 if err != nil {
@@ -224,8 +224,8 @@ You can use the loaded configuration to initialize your agent:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/agentconfig"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
 )
 
 // Load configuration

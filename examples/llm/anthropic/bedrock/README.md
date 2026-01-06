@@ -273,4 +273,4 @@ Error: Model use case details have not been submitted for this account
 - [Anthropic on Bedrock Guide](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages.html)
 - [AWS Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
 - [AWS SDK for Go v2](https://aws.github.io/aws-sdk-go-v2/docs/)
-- [agent-sdk-go Repository](https://github.com/Ingenimax/agent-sdk-go)
+- [agent-sdk-go Repository](https://github.com/tagus/agent-sdk-go)

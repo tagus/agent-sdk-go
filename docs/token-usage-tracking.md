@@ -1,6 +1,6 @@
 # Token Usage Tracking
 
-This document explains the token usage tracking feature in the agent-sdk-go library, which addresses [GitHub Issue #166](https://github.com/Ingenimax/agent-sdk-go/issues/166).
+This document explains the token usage tracking feature in the agent-sdk-go library, which addresses [GitHub Issue #166](https://github.com/tagus/agent-sdk-go/issues/166).
 
 ## Overview
 
@@ -80,7 +80,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
+    "github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
 )
 
 func main() {

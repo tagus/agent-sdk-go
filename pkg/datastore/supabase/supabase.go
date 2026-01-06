@@ -13,8 +13,8 @@ import (
 	"github.com/supabase-community/postgrest-go"
 	"github.com/supabase-community/supabase-go"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"github.com/lib/pq"
 )
 

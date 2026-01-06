@@ -16,9 +16,9 @@ To create a new agent programmatically, use the `NewAgent` function with various
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create a new agent
@@ -38,8 +38,8 @@ You can load agent configurations from YAML files using `LoadAgentConfigsFromFil
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // Load agent configurations from YAML file
@@ -510,12 +510,12 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
-    "github.com/Ingenimax/agent-sdk-go/pkg/tracing/langfuse"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/tools/websearch"
+    "github.com/tagus/agent-sdk-go/pkg/tracing/langfuse"
 )
 
 func main() {
@@ -606,8 +606,8 @@ import (
     "log"
     "os"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {

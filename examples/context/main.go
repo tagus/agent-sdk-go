@@ -5,14 +5,14 @@ import (
 	"os"
 	"time"
 
-	pkgcontext "github.com/Ingenimax/agent-sdk-go/pkg/context"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	pkgcontext "github.com/tagus/agent-sdk-go/pkg/context"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func main() {

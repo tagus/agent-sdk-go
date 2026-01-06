@@ -13,7 +13,7 @@ Memory allows an agent to remember previous interactions and maintain context ac
 The simplest memory type that stores all messages in a buffer:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+import "github.com/tagus/agent-sdk-go/pkg/memory"
 
 // Create a conversation buffer memory
 mem := memory.NewConversationBuffer()
@@ -24,7 +24,7 @@ mem := memory.NewConversationBuffer()
 Stores only the most recent N messages:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+import "github.com/tagus/agent-sdk-go/pkg/memory"
 
 // Create a conversation buffer window memory with a window size of 10 messages
 mem := memory.NewConversationBufferWindow(10)
@@ -35,7 +35,7 @@ mem := memory.NewConversationBufferWindow(10)
 Stores messages in Redis for persistence:
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/memory/redis"
+import "github.com/tagus/agent-sdk-go/pkg/memory/redis"
 
 // Create a Redis memory
 mem := redis.New(
@@ -51,8 +51,8 @@ To use memory with an agent, pass it to the `WithMemory` option:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create memory
@@ -74,8 +74,8 @@ You can add messages to memory directly:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create memory
@@ -145,7 +145,7 @@ When using memory with multi-tenancy, you need to include the organization ID in
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // Create context with organization ID
@@ -177,7 +177,7 @@ You can use conversation IDs to manage multiple conversations:
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // Create context with conversation ID
@@ -209,7 +209,7 @@ You can create custom memory implementations by implementing the `interfaces.Mem
 ```go
 import (
     "context"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // CustomMemory is a custom memory implementation
@@ -316,13 +316,13 @@ import (
     "fmt"
     "log"
 
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/config"
-    "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory"
-    "github.com/Ingenimax/agent-sdk-go/pkg/memory/redis"
-    "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/config"
+    "github.com/tagus/agent-sdk-go/pkg/interfaces"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/memory"
+    "github.com/tagus/agent-sdk-go/pkg/memory/redis"
+    "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 func main() {

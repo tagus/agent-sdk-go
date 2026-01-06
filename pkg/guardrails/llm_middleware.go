@@ -3,7 +3,7 @@ package guardrails
 import (
 	"context"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // LLMMiddleware implements middleware for LLM calls

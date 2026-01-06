@@ -8,16 +8,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/orchestration"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/calculator"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/orchestration"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/tools/calculator"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 // Define custom context key types to avoid using string literals

@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/examples/microservices/shared"
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/microservice"
-	"github.com/Ingenimax/agent-sdk-go/pkg/structuredoutput"
+	"github.com/tagus/agent-sdk-go/examples/microservices/shared"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/microservice"
+	"github.com/tagus/agent-sdk-go/pkg/structuredoutput"
 )
 
 // ProgrammingConcept represents a structured explanation of a programming concept

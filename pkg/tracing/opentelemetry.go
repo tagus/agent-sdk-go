@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
@@ -150,7 +150,7 @@ func (t *OTelTracer) StartSpan(ctx context.Context, name string) (context.Contex
 	}
 
 	// Namespace the span name with the library name
-	namespacedName := "github.com/Ingenimax/agent-sdk-go/" + name
+	namespacedName := "github.com/tagus/agent-sdk-go/" + name
 
 	// Start span
 	ctx, span := t.tracer.Start(ctx, namespacedName, trace.WithAttributes(attrs...))
@@ -174,7 +174,7 @@ func (t *OTelTracer) StartTraceSession(ctx context.Context, contextID string) (c
 	}
 
 	// Namespace the span name with the library name
-	namespacedName := "github.com/Ingenimax/agent-sdk-go/trace-session"
+	namespacedName := "github.com/tagus/agent-sdk-go/trace-session"
 
 	// Start root span for the session
 	ctx, span := t.tracer.Start(ctx, namespacedName, trace.WithAttributes(attrs...))

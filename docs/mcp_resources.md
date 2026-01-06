@@ -34,7 +34,7 @@ package main
 import (
     "context"
     "fmt"
-    "github.com/Ingenimax/agent-sdk-go/pkg/mcp"
+    "github.com/tagus/agent-sdk-go/pkg/mcp"
 )
 
 func main() {

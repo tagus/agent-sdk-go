@@ -27,7 +27,7 @@ docker run -d \
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/graphrag/weaviate"
+    "github.com/tagus/agent-sdk-go/pkg/graphrag/weaviate"
 )
 
 // Create store (no embedder - uses keyword search)
@@ -48,8 +48,8 @@ For semantic search, configure an embedder:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/graphrag/weaviate"
-    "github.com/Ingenimax/agent-sdk-go/pkg/embedding/openai"
+    "github.com/tagus/agent-sdk-go/pkg/graphrag/weaviate"
+    "github.com/tagus/agent-sdk-go/pkg/embedding/openai"
 )
 
 // Create embedder
@@ -67,8 +67,8 @@ store, err := weaviate.New(&weaviate.Config{
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
 )
 
 // Create LLM
@@ -97,7 +97,7 @@ response, err := ag.Run(ctx, "Who works on the Platform team?")
 ### Storing Entities
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 entities := []interfaces.Entity{
     {
@@ -227,7 +227,7 @@ err := store.StoreRelationships(ctx, relationships)
 ### Retrieving Relationships
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
+import "github.com/tagus/agent-sdk-go/pkg/graphrag"
 
 // Get outgoing relationships (from entity)
 outgoing, err := store.GetRelationships(ctx, "person-john", graphrag.DirectionOutgoing)
@@ -262,7 +262,7 @@ for _, r := range results {
 ### Search with Options
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
+import "github.com/tagus/agent-sdk-go/pkg/graphrag"
 
 // Hybrid search (vector + keyword)
 results, err := store.Search(ctx, "platform infrastructure", 10,
@@ -397,7 +397,7 @@ if err := store.StoreRelationships(ctx, result.Relationships); err != nil {
 ### Schema-Guided Extraction
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
+import "github.com/tagus/agent-sdk-go/pkg/graphrag"
 
 result, err := store.ExtractFromText(ctx, text, llm,
     graphrag.WithSchemaGuidance(true),
@@ -413,7 +413,7 @@ GraphRAG supports organization-based data isolation:
 ### Context-Based (Preferred)
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+import "github.com/tagus/agent-sdk-go/pkg/multitenancy"
 
 // Create context with organization ID
 ctx := multitenancy.WithOrgID(context.Background(), "org-123")
@@ -439,7 +439,7 @@ store.SetTenant("")
 ### Per-Operation
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
+import "github.com/tagus/agent-sdk-go/pkg/graphrag"
 
 err := store.StoreEntities(ctx, entities, graphrag.WithTenant("org-123"))
 results, err := store.Search(ctx, "query", 10, graphrag.WithTenant("org-123"))

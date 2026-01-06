@@ -5,9 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // CreateLLM creates an LLM client based on environment variables

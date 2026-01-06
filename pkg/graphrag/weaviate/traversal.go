@@ -3,9 +3,9 @@ package weaviate
 import (
 	"context"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/graphrag"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 // TraverseFrom performs a breadth-first traversal from a starting entity.

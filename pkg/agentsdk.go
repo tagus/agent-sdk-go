@@ -4,15 +4,15 @@ import (
 	"context"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/agentconfig"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/api"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/executor"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/planner"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/service"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agentconfig"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/task"
+	"github.com/tagus/agent-sdk-go/pkg/task/api"
+	"github.com/tagus/agent-sdk-go/pkg/task/executor"
+	"github.com/tagus/agent-sdk-go/pkg/task/planner"
+	"github.com/tagus/agent-sdk-go/pkg/task/service"
 )
 
 // NewAgent creates a new agent with the given options

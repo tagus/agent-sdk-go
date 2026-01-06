@@ -10,7 +10,7 @@
 package graphrag
 
 import (
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // Type aliases for convenience - the canonical types are in interfaces package

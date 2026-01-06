@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // TestRealAPIIntegration tests the DeepSeek client with the real API

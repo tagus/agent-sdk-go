@@ -6,6 +6,8 @@
 
 # Agent Go SDK 
 
+> **Note:** This is a fork of the [Ingenimax Agent Go SDK](https://github.com/Ingenimax/agent-sdk-go). All credit for the original work goes to the Ingenimax team.
+
 A powerful Go framework for building production-ready AI agents that seamlessly integrates memory management, tool execution, multi-LLM support, and enterprise features into a flexible, extensible architecture.
 
 ## Documentation
@@ -51,26 +53,26 @@ Join our Discord server to collaborate, share what you're building, and get comm
 Add the SDK to your Go project:
 
 ```bash
-go get github.com/Ingenimax/agent-sdk-go
+go get github.com/tagus/agent-sdk-go
 ```
 
 #### As a CLI Tool (Headless SDK)
 
 **Option 1: Download Pre-built Binaries (Recommended)**
 
-Download the latest release for your platform from [GitHub Releases](https://github.com/Ingenimax/agent-sdk-go/releases) and add it to your PATH.
+Download the latest release for your platform from [GitHub Releases](https://github.com/tagus/agent-sdk-go/releases) and add it to your PATH.
 
 **Option 2: Install via Go**
 
 ```bash
-go install github.com/Ingenimax/agent-sdk-go/cmd/agent-cli@latest
+go install github.com/tagus/agent-sdk-go/cmd/agent-cli@latest
 ```
 
 **Option 3: Build from Source**
 
 ```bash
 # Clone the repository
-git clone https://github.com/Ingenimax/agent-sdk-go
+git clone https://github.com/tagus/agent-sdk-go
 cd agent-sdk-go
 
 # Build the CLI tool
@@ -172,14 +174,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
 )
 
 func main() {
@@ -252,7 +254,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
+	"github.com/tagus/agent-sdk-go/pkg/llm/anthropic"
 )
 
 func main() {
@@ -322,8 +324,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {
@@ -452,8 +454,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {
@@ -651,9 +653,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 func main() {
@@ -739,9 +741,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 func main() {
@@ -813,12 +815,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/mcp"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/mcp"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 )
 
 func main() {

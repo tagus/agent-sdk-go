@@ -9,8 +9,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/graphrag"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/graphrag"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // ExtractFromText extracts entities and relationships from text using an LLM.

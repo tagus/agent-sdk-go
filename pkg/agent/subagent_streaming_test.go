@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // StreamingMockLLM is a mock LLM that supports streaming

@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/graphrag/weaviate"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/graphrag/weaviate"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 func main() {

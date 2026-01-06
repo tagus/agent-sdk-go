@@ -7,9 +7,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/deepseek"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
 )
 
 // SearchTool simulates a web search tool

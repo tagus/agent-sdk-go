@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
 )
 
 func main() {

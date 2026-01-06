@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task"
-	"github.com/Ingenimax/agent-sdk-go/pkg/task/core"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/task"
+	"github.com/tagus/agent-sdk-go/pkg/task/core"
 )
 
 // Service defines the interface for task management from the task package

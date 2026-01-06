@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
 	"gopkg.in/yaml.v3"
 )
 

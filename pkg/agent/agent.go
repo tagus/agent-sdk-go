@@ -9,16 +9,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/executionplan"
-	"github.com/Ingenimax/agent-sdk-go/pkg/grpc/client"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
-	"github.com/Ingenimax/agent-sdk-go/pkg/mcp"
-	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
-	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tools"
-	"github.com/Ingenimax/agent-sdk-go/pkg/tracing"
+	"github.com/tagus/agent-sdk-go/pkg/executionplan"
+	"github.com/tagus/agent-sdk-go/pkg/grpc/client"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/llm/openai"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/mcp"
+	"github.com/tagus/agent-sdk-go/pkg/memory"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+	"github.com/tagus/agent-sdk-go/pkg/tools"
+	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 // LazyMCPConfig holds configuration for lazy MCP server initialization

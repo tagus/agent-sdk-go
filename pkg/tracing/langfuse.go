@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/config"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/config"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // LangfuseTracer implements tracing using Langfuse via OTEL (backward compatibility wrapper)

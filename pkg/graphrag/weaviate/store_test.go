@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/embedding"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/embedding"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // MockEmbedder implements a mock embedder for testing.

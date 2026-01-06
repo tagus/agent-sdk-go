@@ -15,7 +15,7 @@ This package provides a client for interacting with the OpenAI API, implementing
 ### Creating a Client
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+import "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 
 // Create a client with default settings
 client := openai.NewClient(apiKey)
@@ -40,7 +40,7 @@ response, err := client.Generate(
 ### Chat Completion
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/llm"
+import "github.com/tagus/agent-sdk-go/pkg/llm"
 
 messages := []llm.Message{
     {
@@ -59,7 +59,7 @@ response, err := client.Chat(context.Background(), messages, nil)
 ### Tool Integration
 
 ```go
-import "github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+import "github.com/tagus/agent-sdk-go/pkg/interfaces"
 
 // Define tools
 tools := []interfaces.Tool{...}
@@ -89,8 +89,8 @@ The OpenAI client can be directly used with agents:
 
 ```go
 import (
-    "github.com/Ingenimax/agent-sdk-go/pkg/agent"
-    "github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
+    "github.com/tagus/agent-sdk-go/pkg/agent"
+    "github.com/tagus/agent-sdk-go/pkg/llm/openai"
 )
 
 // Create OpenAI client

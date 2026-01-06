@@ -11,10 +11,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
-	"github.com/Ingenimax/agent-sdk-go/pkg/grpc/pb"
-	"github.com/Ingenimax/agent-sdk-go/pkg/grpc/server"
-	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/agent"
+	"github.com/tagus/agent-sdk-go/pkg/grpc/pb"
+	"github.com/tagus/agent-sdk-go/pkg/grpc/server"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 )
 
 // AgentMicroservice represents a microservice wrapping an agent

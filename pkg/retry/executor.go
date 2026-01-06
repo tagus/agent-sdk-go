@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Ingenimax/agent-sdk-go/pkg/logging"
+	"github.com/tagus/agent-sdk-go/pkg/logging"
 )
 
 // Executor handles the execution of operations with retries
