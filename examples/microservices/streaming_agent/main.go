@@ -70,8 +70,8 @@ const (
 // 6. Parse and beautifully display structured JSON responses
 //
 // Required environment variables:
-// - ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY (depending on provider)
-// - LLM_PROVIDER: "anthropic", "openai", or "gemini" (optional, auto-detects based on API keys)
+// - ANTHROPIC_API_KEY or OPENAI_API_KEY (depending on provider)
+// - LLM_PROVIDER: "anthropic" or "openai" (optional, auto-detects based on API keys)
 
 func main() {
 	fmt.Println("Streaming Agent with Structured Output Example")

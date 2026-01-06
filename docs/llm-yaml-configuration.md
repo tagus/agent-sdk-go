@@ -89,7 +89,7 @@ llm_provider:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `provider` | string | Yes | LLM provider name (`anthropic`, `openai`, `gemini`, `azure_openai`, `ollama`, `vllm`) |
+| `provider` | string | Yes | LLM provider name (`anthropic`, `openai`, `azure_openai`, `ollama`, `vllm`) |
 | `model` | string | No | Model identifier (defaults to provider's default model) |
 | `config` | map | No | Provider-specific configuration options |
 
@@ -196,29 +196,6 @@ llm_provider:
     # Advanced options
     enable_streaming: true
     timeout_seconds: 30
-```
-
-### Google Gemini
-
-```yaml
-llm_provider:
-  provider: "gemini"
-  model: "${GEMINI_MODEL:-gemini-1.5-pro}"
-  config:
-    api_key: "${GEMINI_API_KEY}"              # Required (or use ADC)
-    project: "${GOOGLE_CLOUD_PROJECT}"        # Optional (for Vertex AI)
-    location: "${GOOGLE_CLOUD_LOCATION}"      # Optional (for Vertex AI)
-    temperature: 0.7                           # Optional (0.0-1.0)
-    max_output_tokens: 4096                   # Optional
-    top_p: 0.95                               # Optional
-    top_k: 40                                 # Optional
-
-    # Safety settings
-    harm_block_threshold: "BLOCK_MEDIUM_AND_ABOVE"
-
-    # Advanced options
-    enable_streaming: true
-    use_vertex_ai: false                      # Use Vertex AI instead of Gemini API
 ```
 
 ### Azure OpenAI
@@ -710,7 +687,6 @@ echo $OPENAI_API_KEY  # Should output your key
 **Solution:** Use one of the supported provider names:
 - `anthropic`
 - `openai`
-- `gemini`
 - `azure_openai`
 - `ollama`
 - `vllm`
@@ -722,7 +698,6 @@ echo $OPENAI_API_KEY  # Should output your key
 **Solution:** Check provider documentation for valid model names:
 - Anthropic: `claude-3-5-sonnet-latest`, `claude-3-opus-latest`
 - OpenAI: `gpt-4-turbo-preview`, `gpt-4`, `gpt-3.5-turbo`
-- Gemini: `gemini-1.5-pro`, `gemini-1.5-flash`
 
 #### 4. Configuration Validation Failed
 

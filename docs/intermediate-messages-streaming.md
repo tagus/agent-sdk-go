@@ -162,7 +162,6 @@ Intermediate message streaming is implemented for:
 - ✅ Anthropic (Claude models)
 - ✅ OpenAI (GPT models including GPT-4, GPT-3.5, o1 models)
 - ✅ Azure OpenAI (All supported models)
-- ✅ Google Gemini (Gemini Pro, Gemini Flash, etc.)
 
 ### Technical Implementation
 
@@ -191,16 +190,6 @@ if filterIntermediateContent && len(openaiTools) > 0 && iteration < maxIteration
     // Stream content immediately
     eventChan <- contentEvent
 }
-```
-
-#### Gemini Implementation
-Uses a modified execution function that supports optional content filtering:
-
-```go
-// Filtering logic in Gemini
-shouldFilter := filterIntermediateContent && len(tools) > 0 && iteration < maxIterations-1
-toolCalls, hasContent, iterationContentEvents, err := c.executeStreamingRequestWithToolCaptureAndFilter(
-    ctx, contents, config, eventCh, shouldFilter)
 ```
 
 All implementations maintain backward compatibility by defaulting to filtered content (current behavior).

@@ -213,7 +213,6 @@ func (c *ProviderClient) generateInternal(ctx context.Context, prompt string, op
 | Anthropic | ✅ Yes | ❌ No | ✅ Yes | Complete usage data in responses |
 | OpenAI | ✅ Yes | ✅ Yes (o1) | ✅ Yes | Full support with reasoning |
 | Azure OpenAI | ✅ Yes | ✅ Yes (o1) | ✅ Yes | Same as OpenAI implementation |
-| Gemini | ✅ Yes | ✅ Partial (2.5) | ❓ TBD | Has thinking tokens, count may not be available |
 | Ollama | ❌ No | ❌ No | ❌ No | Local model, no usage reporting |
 | vLLM | ❌ No | ❌ No | ❓ Limited | Local model, check API docs |
 

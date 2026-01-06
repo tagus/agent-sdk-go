@@ -383,18 +383,6 @@ func advancedStreamingFeatures(ctx context.Context, provider string) error {
 				opts.SystemMessage = "You are a quantum physics expert. Think through problems methodically."
 			},
 		}
-	case "gemini":
-		prompt = "Using comprehensive reasoning, explain step by step: How does the process of photosynthesis convert light energy into chemical energy?"
-		options = []interfaces.GenerateOption{
-			interfaces.WithStreamConfig(streamConfig),
-			func(opts *interfaces.GenerateOptions) {
-				opts.SystemMessage = "You are a biology expert. Think through biological processes systematically and explain each step clearly."
-				if opts.LLMConfig == nil {
-					opts.LLMConfig = &interfaces.LLMConfig{}
-				}
-				opts.LLMConfig.Reasoning = "comprehensive"
-			},
-		}
 	}
 
 	// Start streaming with custom config
@@ -574,19 +562,6 @@ func realReasoningDemo(ctx context.Context, provider string) error {
 		} else {
 			fmt.Printf("%sUsing OpenAI model (reasoning tokens not available for this model)%s\n", ColorBlue, ColorReset)
 		}
-	case "gemini":
-		prompt = "Solve this step-by-step: If a car travels 120 km in 2 hours for the first part of a journey, then 200 km in 2.5 hours for the second part, what is the average speed for the entire journey?"
-		options = []interfaces.GenerateOption{
-			func(opts *interfaces.GenerateOptions) {
-				opts.SystemMessage = "You are a math tutor. Solve the problem systematically and show your complete reasoning."
-				if opts.LLMConfig == nil {
-					opts.LLMConfig = &interfaces.LLMConfig{}
-				}
-				opts.LLMConfig.Reasoning = "comprehensive"
-			},
-		}
-		fmt.Printf("%s🌟 Using Gemini with comprehensive reasoning mode%s\n", ColorBlue, ColorReset)
-		fmt.Printf("%sℹ️  Gemini reasoning is handled through system prompts and comprehensive mode%s\n", ColorBlue, ColorReset)
 	}
 
 	fmt.Printf("%sPrompt: %s%s\n", ColorBlue, prompt, ColorReset)

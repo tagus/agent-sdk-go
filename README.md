@@ -23,7 +23,7 @@ Join our Discord server to collaborate, share what you're building, and get comm
 ## Features
 
 ### Core Capabilities
-- 🧠 **Multi-Model Intelligence**: Seamless integration with OpenAI, Anthropic, and Google Vertex AI (Gemini models).
+- 🧠 **Multi-Model Intelligence**: Seamless integration with OpenAI and Anthropic.
 - 🔧 **Modular Tool Ecosystem**: Expand agent capabilities with plug-and-play tools for web search, data retrieval, and custom operations
 - 📝 **Advanced Memory Management**: Persistent conversation tracking with buffer and vector-based retrieval options
 - 🔌 **MCP Integration**: Support for Model Context Protocol (MCP) servers via HTTP and stdio transports
@@ -909,11 +909,6 @@ The SDK follows a modular architecture with these key components:
   - 128K token context window
   - Reasoning mode with up to 64K output tokens
   - Full feature parity with OpenAI/Anthropic
-- **Google Vertex AI**: Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini 2.0 Flash, and Gemini Pro Vision
-  - Advanced reasoning modes (none, minimal, comprehensive)
-  - Multimodal capabilities with vision models
-  - Function calling and tool integration
-  - Flexible authentication (ADC or service account files)
 - **Ollama**: Local LLM server supporting various open-source models
   - Run models locally without external API calls
   - Support for Llama2, Mistral, CodeLlama, and other models
@@ -1028,8 +1023,7 @@ Check out the `cmd/examples` directory for complete examples:
 - **Auto-Configuration**: Generating agent configurations from system prompts
 - **Agent Config Wizard**: Interactive CLI for creating and using agents
 - **MCP Integration**: Using Model Context Protocol servers with agents
-- **Multi-LLM Support**: Examples using OpenAI, Azure OpenAI, Anthropic, and Vertex AI
-- **Vertex AI Integration**: Comprehensive examples with Gemini models, reasoning modes, and tools
+- **Multi-LLM Support**: Examples using OpenAI, Azure OpenAI, and Anthropic
 
 ### LLM Provider Examples
 
