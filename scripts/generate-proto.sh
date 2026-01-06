@@ -30,10 +30,11 @@ mkdir -p pkg/grpc/pb
 # Generate Go code from proto files
 echo "Generating gRPC Go code..."
 protoc \
-    --go_out=. \
+    --proto_path=pkg/grpc/proto \
+    --go_out=pkg/grpc/pb \
     --go_opt=paths=source_relative \
-    --go-grpc_out=. \
+    --go-grpc_out=pkg/grpc/pb \
     --go-grpc_opt=paths=source_relative \
-    pkg/grpc/proto/agent.proto
+    agent.proto
 
 echo "gRPC Go code generated successfully!"

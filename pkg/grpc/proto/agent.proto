@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package agent;
 
-option go_package = "github.com/Ingenimax/agent-sdk-go/pkg/grpc/pb";
+option go_package = "github.com/tagus/agent-sdk-go/pkg/grpc/pb";
 
 // AgentService defines the gRPC service for agent operations
 service AgentService {
