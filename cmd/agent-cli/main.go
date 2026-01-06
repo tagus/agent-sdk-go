@@ -14,7 +14,6 @@ import (
 	"github.com/Ingenimax/agent-sdk-go/pkg/config"
 	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/gemini"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/ollama"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/vllm"
@@ -25,7 +24,6 @@ import (
 	"github.com/Ingenimax/agent-sdk-go/pkg/tools/github"
 	"github.com/Ingenimax/agent-sdk-go/pkg/tools/websearch"
 	"github.com/Ingenimax/agent-sdk-go/pkg/tracing"
-	"google.golang.org/genai"
 )
 
 const (
@@ -1427,7 +1425,6 @@ func listProviders() {
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Println("  openai     - OpenAI GPT models (requires OPENAI_API_KEY)")
 	fmt.Println("  anthropic  - Anthropic Claude models (requires ANTHROPIC_API_KEY)")
-	fmt.Println("  vertex     - Google Vertex AI Gemini models (requires GOOGLE_APPLICATION_CREDENTIALS)")
 	fmt.Println("  ollama     - Local Ollama server (requires Ollama running on localhost:11434)")
 	fmt.Println("  vllm       - vLLM inference server (requires vLLM server running on localhost:8000)")
 }
@@ -1443,11 +1440,6 @@ func listModels() {
 	fmt.Println("Anthropic:")
 	fmt.Println("  - claude-3-5-sonnet-20241022 (most capable)")
 	fmt.Println("  - claude-3-haiku-20240307 (fast)")
-	fmt.Println()
-	fmt.Println("Vertex AI:")
-	fmt.Println("  - gemini-1.5-pro (most capable)")
-	fmt.Println("  - gemini-1.5-flash (fast)")
-	fmt.Println("  - gemini-2.0-flash-exp (experimental)")
 	fmt.Println()
 	fmt.Println("Ollama (local):")
 	fmt.Println("  - llama3.2:latest")
@@ -1603,8 +1595,6 @@ func getDefaultModel(provider string) string {
 		return "gpt-4o-mini"
 	case "anthropic":
 		return "claude-3-5-sonnet-20241022"
-	case "vertex":
-		return "gemini-1.5-pro"
 	case "ollama":
 		return "llama3.2:latest"
 	case "vllm":
@@ -1678,20 +1668,6 @@ func createLLM(config *CLIConfig) interfaces.LLM {
 		}
 		return anthropic.NewClient(apiKey,
 			anthropic.WithModel(config.Model))
-
-	case "vertex":
-		projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-		if projectID == "" {
-			log.Fatal("GOOGLE_CLOUD_PROJECT environment variable is required for Vertex AI provider")
-		}
-		client, err := gemini.NewClient(context.Background(),
-			gemini.WithBackend(genai.BackendVertexAI),
-			gemini.WithProjectID(projectID),
-			gemini.WithModel(config.Model))
-		if err != nil {
-			log.Fatalf("Failed to create Vertex AI client: %v", err)
-		}
-		return client
 
 	case "ollama":
 		baseURL := os.Getenv("OLLAMA_BASE_URL")

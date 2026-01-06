@@ -11,7 +11,7 @@ import (
 	"github.com/Ingenimax/agent-sdk-go/pkg/agent"
 	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/gemini"
+
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
 	"github.com/Ingenimax/agent-sdk-go/pkg/memory"
 	"github.com/Ingenimax/agent-sdk-go/pkg/multitenancy"
@@ -30,20 +30,15 @@ const (
 )
 
 // This example demonstrates streaming functionality with the Agent SDK
-// Supports Anthropic, OpenAI, and Gemini streaming implementations
+// Supports Anthropic and OpenAI streaming implementations
 //
 // Required environment variables:
-// - ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY (depending on which provider you want to test)
-// - LLM_PROVIDER: "anthropic", "openai", or "gemini" (optional, defaults to "anthropic")
+// - ANTHROPIC_API_KEY or OPENAI_API_KEY (depending on which provider you want to test)
+// - LLM_PROVIDER: "anthropic" or "openai" (optional, defaults to "anthropic")
 //
 // Example usage:
 // export ANTHROPIC_API_KEY=your_anthropic_key
 // export LLM_PROVIDER=anthropic
-// go run main.go
-//
-// Or for Gemini:
-// export GEMINI_API_KEY=your_gemini_key
-// export LLM_PROVIDER=gemini
 // go run main.go
 
 func main() {
@@ -510,21 +505,8 @@ func createLLM(provider string) (interfaces.LLM, error) {
 			openai.WithModel("gpt-4o"),
 		), nil
 
-	case "gemini":
-		apiKey := os.Getenv("GEMINI_API_KEY")
-		if apiKey == "" {
-			return nil, fmt.Errorf("GEMINI_API_KEY environment variable is required")
-		}
-		// Use thinking-enabled client to demonstrate native thinking capabilities
-		return gemini.NewClient(
-			context.Background(),
-			gemini.WithAPIKey(apiKey),
-			gemini.WithModel(gemini.ModelGemini25Flash),
-			gemini.WithDynamicThinking(), // Enable native thinking tokens
-		)
-
 	default:
-		return nil, fmt.Errorf("unsupported provider: %s (supported: anthropic, openai, gemini)", provider)
+		return nil, fmt.Errorf("unsupported provider: %s (supported: anthropic, openai)", provider)
 	}
 }
 

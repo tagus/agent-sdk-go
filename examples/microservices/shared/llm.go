@@ -1,19 +1,17 @@
 package shared
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/Ingenimax/agent-sdk-go/pkg/interfaces"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/gemini"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
 )
 
 // CreateLLM creates an LLM client based on environment variables
-// It checks for LLM_PROVIDER to determine which provider to use (openai, anthropic, gemini)
+// It checks for LLM_PROVIDER to determine which provider to use (openai, anthropic)
 // If not set, it tries to detect based on available API keys
 func CreateLLM() (interfaces.LLM, error) {
 	provider := strings.ToLower(os.Getenv("LLM_PROVIDER"))
@@ -24,10 +22,8 @@ func CreateLLM() (interfaces.LLM, error) {
 			provider = "openai"
 		} else if os.Getenv("ANTHROPIC_API_KEY") != "" {
 			provider = "anthropic"
-		} else if os.Getenv("GEMINI_API_KEY") != "" {
-			provider = "gemini"
 		} else {
-			return nil, fmt.Errorf("no LLM provider specified and no API keys found. Set LLM_PROVIDER or provide an API key (OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY)")
+			return nil, fmt.Errorf("no LLM provider specified and no API keys found. Set LLM_PROVIDER or provide an API key (OPENAI_API_KEY or ANTHROPIC_API_KEY)")
 		}
 	}
 
@@ -54,23 +50,8 @@ func CreateLLM() (interfaces.LLM, error) {
 		}
 		return anthropic.NewClient(apiKey, anthropic.WithModel(model)), nil
 
-	case "gemini":
-		apiKey := os.Getenv("GEMINI_API_KEY")
-		if apiKey == "" {
-			return nil, fmt.Errorf("GEMINI_API_KEY environment variable is required for Gemini provider")
-		}
-		model := os.Getenv("GEMINI_MODEL")
-		if model == "" {
-			model = gemini.ModelGemini15Flash // Default model
-		}
-		client, err := gemini.NewClient(context.Background(), gemini.WithAPIKey(apiKey), gemini.WithModel(model))
-		if err != nil {
-			return nil, fmt.Errorf("failed to create Gemini client: %w", err)
-		}
-		return client, nil
-
 	default:
-		return nil, fmt.Errorf("unsupported LLM provider: %s (supported: openai, anthropic, gemini)", provider)
+		return nil, fmt.Errorf("unsupported LLM provider: %s (supported: openai, anthropic)", provider)
 	}
 }
 
@@ -84,8 +65,6 @@ func GetProviderInfo() string {
 			provider = "openai"
 		} else if os.Getenv("ANTHROPIC_API_KEY") != "" {
 			provider = "anthropic"
-		} else if os.Getenv("GEMINI_API_KEY") != "" {
-			provider = "gemini"
 		} else {
 			return "No LLM provider configured"
 		}
@@ -105,13 +84,6 @@ func GetProviderInfo() string {
 			model = anthropic.Claude37Sonnet
 		}
 		return fmt.Sprintf("Anthropic (%s)", model)
-
-	case "gemini":
-		model := os.Getenv("GEMINI_MODEL")
-		if model == "" {
-			model = gemini.ModelGemini15Flash
-		}
-		return fmt.Sprintf("Gemini (%s)", model)
 
 	default:
 		return fmt.Sprintf("Unknown provider: %s", provider)

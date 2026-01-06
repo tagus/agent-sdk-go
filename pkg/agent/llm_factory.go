@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -12,7 +11,6 @@ import (
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/anthropic"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/azureopenai"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/deepseek"
-	"github.com/Ingenimax/agent-sdk-go/pkg/llm/gemini"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/ollama"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/openai"
 	"github.com/Ingenimax/agent-sdk-go/pkg/llm/vllm"
@@ -35,14 +33,12 @@ func createLLMFromConfig(config *LLMProviderYAML) (interfaces.LLM, error) {
 		return createAzureOpenAIClient(config)
 	case "deepseek":
 		return createDeepSeekClient(config)
-	case "gemini":
-		return createGeminiClient(config)
 	case "ollama":
 		return createOllamaClient(config)
 	case "vllm":
 		return createVllmClient(config)
 	default:
-		return nil, fmt.Errorf("unsupported LLM provider: %s (supported: anthropic, openai, azureopenai, deepseek, gemini, ollama, vllm)", provider)
+		return nil, fmt.Errorf("unsupported LLM provider: %s (supported: anthropic, openai, azureopenai, deepseek, ollama, vllm)", provider)
 	}
 }
 
@@ -282,54 +278,6 @@ func createAzureOpenAIClient(config *LLMProviderYAML) (interfaces.LLM, error) {
 	options = append(options, azureopenai.WithAPIVersion(apiVersion))
 
 	return azureopenai.NewClient(apiKey, endpoint, deployment, options...), nil
-}
-
-// createGeminiClient creates a Google Gemini LLM client
-func createGeminiClient(config *LLMProviderYAML) (interfaces.LLM, error) {
-	var options []gemini.Option
-
-	// Get API key from config or environment
-	apiKey := getConfigString(config.Config, "api_key")
-	if apiKey == "" {
-		apiKey = GetEnvValue("GEMINI_API_KEY")
-	}
-	if apiKey == "" {
-		return nil, fmt.Errorf("api_key is required for Gemini provider (set GEMINI_API_KEY or provide in config)")
-	}
-
-	// Set API key
-	options = append(options, gemini.WithAPIKey(apiKey))
-
-	// Set model - use config model or fallback to GEMINI_MODEL env var
-	model := ExpandEnv(config.Model)
-	if model == "" {
-		model = getConfigString(config.Config, "model")
-	}
-	if model == "" {
-		model = GetEnvValue("GEMINI_MODEL")
-	}
-	if model != "" {
-		options = append(options, gemini.WithModel(model))
-	}
-
-	// Set project for Vertex AI if provided
-	if project := getConfigString(config.Config, "project"); project != "" {
-		options = append(options, gemini.WithProjectID(project))
-	}
-
-	// Set location for Vertex AI if provided
-	if location := getConfigString(config.Config, "location"); location != "" {
-		options = append(options, gemini.WithLocation(location))
-	}
-
-	// Create context for client initialization
-	ctx := context.Background()
-	client, err := gemini.NewClient(ctx, options...)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
-	}
-
-	return client, nil
 }
 
 // createOllamaClient creates an Ollama LLM client
