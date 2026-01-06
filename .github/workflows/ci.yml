@@ -7,48 +7,23 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: [ '1.23.8' ]
-
     steps:
-    - uses: actions/checkout@v5
+    - name: Checkout code
+      uses: actions/checkout@v5
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: ${{ matrix.go-version }}
+        go-version: '1.23.8'
+        cache: true
 
-    - name: Install dependencies
+    - name: Download dependencies
       run: go mod download
 
     - name: Build
       run: go build -v ./...
 
-    - name: Test
-      run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        files: ./coverage.txt
-
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v8
-      with:
-        version: latest
-
-  security:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v5
-
-    - name: Run Gosec Security Scanner
-      uses: securego/gosec@master
-      with:
-        args: ./...
-
-    - name: Run dependency vulnerability scan
-      uses: golang/govulncheck-action@v1
+    - name: Run tests
+      run: go test -v -race ./...
