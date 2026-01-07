@@ -16,7 +16,6 @@ import (
 	"github.com/tagus/agent-sdk-go/pkg/logging"
 	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"github.com/tagus/agent-sdk-go/pkg/retry"
-	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
 // AnthropicClient implements the LLM interface for Anthropic
@@ -29,7 +28,6 @@ type AnthropicClient struct {
 	retryExecutor       *retry.Executor
 	vertexRetryExecutor *VertexRetryExecutor
 	VertexConfig        *VertexConfig
-	BedrockConfig       *BedrockConfig
 }
 
 // Option represents an option for configuring the Anthropic client
@@ -203,26 +201,6 @@ func WithGoogleApplicationCredentials(region, projectID, credentialsContent stri
 	}
 }
 
-// WithBedrockAWSConfig configures Bedrock with an existing AWS config
-// This is useful when you have a pre-configured AWS config with custom settings
-func WithBedrockAWSConfig(awsConfig aws.Config) Option {
-	return func(c *AnthropicClient) {
-		ctx := context.Background()
-		bedrockConfig, err := NewBedrockConfigWithAWSConfig(ctx, awsConfig)
-		if err != nil {
-			c.logger.Error(ctx, "Failed to configure Bedrock with AWS config", map[string]interface{}{
-				"error":  err.Error(),
-				"region": awsConfig.Region,
-			})
-			return
-		}
-		c.BedrockConfig = bedrockConfig
-		c.logger.Info(ctx, "Configured client for AWS Bedrock with AWS config", map[string]interface{}{
-			"region": awsConfig.Region,
-		})
-	}
-}
-
 // NewClient creates a new Anthropic client
 func NewClient(apiKey string, options ...Option) *AnthropicClient {
 	// Create client with default options
@@ -272,37 +250,11 @@ const (
 	ClaudeOpus4    = "claude-opus-4-20250514"     // Latest Opus with thinking
 	ClaudeOpus41   = "claude-opus-4-1-20250805"   // Latest Opus 4.1
 	ClaudeOpus45   = "claude-opus-4-5-20251101"   // Latest Opus 4.5
-
-	// AWS Bedrock model IDs
-	BedrockClaude35Haiku  = "anthropic.claude-3-5-haiku-20241022-v1:0"
-	BedrockClaude35Sonnet = "anthropic.claude-3-5-sonnet-20241022-v2:0"
-	BedrockClaude3Opus    = "anthropic.claude-3-opus-20240229-v1:0"
-	BedrockClaude37Sonnet = "anthropic.claude-3-7-sonnet-20250219-v1:0"
-	BedrockClaudeSonnet4  = "anthropic.claude-sonnet-4-20250514-v1:0"
-	BedrockClaudeSonnet45 = "anthropic.claude-sonnet-4-5-20250929-v1:0"
-	BedrockClaudeOpus4    = "anthropic.claude-opus-4-20250514-v1:0"
-	BedrockClaudeOpus41   = "anthropic.claude-opus-4-1-20250805-v1:0"
-	BedrockClaudeOpus45   = "anthropic.claude-opus-4-5-20251101-v1:0"
 )
 
 // SupportsThinking returns true if the model supports thinking tokens
 func SupportsThinking(model string) bool {
-	// Normalize the model name by removing regional prefixes and extracting base model
-	normalizedModel := model
-
-	// Handle Bedrock models with regional prefixes (us., eu., ap., etc.)
-	if strings.Contains(model, ".anthropic.claude") {
-		// Extract the part after ".anthropic." to get base model
-		parts := strings.SplitN(model, ".anthropic.", 2)
-		if len(parts) == 2 {
-			normalizedModel = parts[1] // e.g., "claude-3-7-sonnet-20250219-v1:0"
-		}
-	} else if strings.HasPrefix(model, "anthropic.claude") {
-		// Strip "anthropic." prefix for models without regional prefix
-		normalizedModel = strings.TrimPrefix(model, "anthropic.")
-	}
-
-	// List of base model patterns that support thinking
+	// List of model patterns that support thinking
 	supportedModels := []string{
 		"claude-3-7-sonnet-20250219",
 		"claude-sonnet-4-20250514",
@@ -318,17 +270,10 @@ func SupportsThinking(model string) bool {
 		"claude-opus-4-v1@20250514",
 		"claude-opus-4-1@20250805",
 		"claude-opus-4-5@20251101",
-		// AWS Bedrock base patterns (without regional prefix)
-		"claude-3-7-sonnet-20250219-v1:0",
-		"claude-sonnet-4-20250514-v1:0",
-		"claude-sonnet-4-5-20250929-v1:0",
-		"claude-opus-4-20250514-v1:0",
-		"claude-opus-4-1-20250805-v1:0",
-		"claude-opus-4-5-20251101-v1:0",
 	}
 
 	for _, supportedModel := range supportedModels {
-		if normalizedModel == supportedModel || model == supportedModel {
+		if model == supportedModel {
 			return true
 		}
 	}
@@ -598,22 +543,10 @@ Return only the JSON object, with no additional text or markdown formatting.`, p
 
 	operation := func() error {
 		var apiType string
-		if c.BedrockConfig != nil && c.BedrockConfig.Enabled {
-			apiType = "bedrock"
-		} else if c.VertexConfig != nil && c.VertexConfig.Enabled {
+		if c.VertexConfig != nil && c.VertexConfig.Enabled {
 			apiType = "vertex"
 		} else {
 			apiType = "anthropic"
-		}
-
-		// Bedrock uses AWS SDK, not HTTP requests
-		if c.BedrockConfig != nil && c.BedrockConfig.Enabled {
-			bedrockResp, err := c.BedrockConfig.InvokeModel(ctx, c.Model, &req)
-			if err != nil {
-				return fmt.Errorf("failed to invoke Bedrock model: %w", err)
-			}
-			resp = *bedrockResp
-			return nil
 		}
 
 		var httpReq *http.Request
