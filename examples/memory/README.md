@@ -5,7 +5,6 @@ This example demonstrates different memory implementations in the Agent SDK. Mem
 Before running the example, you'll need:
 1. An OpenAI API key (for the Conversation Summary Memory)
 2. Redis running locally (for the Redis Memory)
-3. Weaviate running locally (for the Vector Store Retriever Memory)
 
 ## Setup
 1. Set environment variables:
@@ -15,27 +14,11 @@ export OPENAI_API_KEY=your_openai_api_key
 
 # Optional for Redis Memory (defaults to localhost:6379)
 export REDIS_ADDR=your_redis_address
-
-# Required for Weaviate Vector Store
-export WEAVIATE_URL=http://localhost:8080
-export WEAVIATE_API_KEY=your_weaviate_api_key  # If authentication is enabled
 ```
 2. Start Redis:
 
 ```bash
 docker run -d --name redis-stack -p 6379:6379 redis/redis-stack-server:latest
-```
-
-3. Start Weaviate:
-
-```bash
-docker run -d --name weaviate \
-  -p 8080:8080 \
-  -e AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true \
-  -e DEFAULT_VECTORIZER_MODULE=text2vec-openai \
-  -e ENABLE_MODULES=text2vec-openai \
-  -e OPENAI_APIKEY=$OPENAI_API_KEY \
-  semitechnologies/weaviate:1.19.6
 ```
 
 ## Running the Example
@@ -123,6 +106,6 @@ You can customize the memory implementations by:
 If you encounter issues:
 
 1. Ensure your OpenAI API key is valid
-2. Check that Redis and Weaviate are running and accessible
+2. Check that Redis are running and accessible
 3. Look for error messages indicating missing dependencies
 4. Verify that the conversation and organization IDs are set in the context

@@ -54,14 +54,6 @@ type Config struct {
 
 	// VectorStore configuration
 	VectorStore struct {
-		// Weaviate configuration
-		Weaviate struct {
-			URL       string
-			APIKey    string
-			Scheme    string
-			Host      string
-			ClassName string
-		}
 	}
 
 	// DataStore configuration
@@ -165,13 +157,6 @@ func LoadFromEnv() *Config {
 	config.Memory.Redis.URL = getEnv("REDIS_URL", "localhost:6379")
 	config.Memory.Redis.Password = getEnv("REDIS_PASSWORD", "")
 	config.Memory.Redis.DB = getEnvInt("REDIS_DB", 0)
-
-	// VectorStore configuration
-	config.VectorStore.Weaviate.URL = getEnv("WEAVIATE_URL", "")
-	config.VectorStore.Weaviate.APIKey = getEnv("WEAVIATE_API_KEY", "")
-	config.VectorStore.Weaviate.Scheme = getEnv("WEAVIATE_SCHEME", "https")
-	config.VectorStore.Weaviate.Host = getEnv("WEAVIATE_HOST", "localhost:8080")
-	config.VectorStore.Weaviate.ClassName = getEnv("WEAVIATE_CLASS_NAME", "Document")
 
 	// DataStore configuration
 	config.DataStore.Supabase.URL = getEnv("SUPABASE_URL", "")

@@ -8,25 +8,6 @@ Vector stores are used to store and retrieve vector embeddings, which are numeri
 
 ## Supported Vector Stores
 
-### Weaviate
-
-```go
-import (
-    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
-    "github.com/tagus/agent-sdk-go/pkg/config"
-)
-
-// Get configuration
-cfg := config.Get()
-
-// Create Weaviate vector store
-store := weaviate.New(
-    cfg.VectorStore.Weaviate.URL,
-    weaviate.WithAPIKey(cfg.VectorStore.Weaviate.APIKey),
-    weaviate.WithClassName("Document"),
-)
-```
-
 ### Pinecone
 
 ```go
@@ -150,25 +131,6 @@ if err != nil {
 
 ## Configuration Options
 
-### Weaviate Options
-
-```go
-// Set the API key
-weaviate.WithAPIKey("your-api-key")
-
-// Set the scheme (http or https)
-weaviate.WithScheme("https")
-
-// Set the host
-weaviate.WithHost("localhost:8080")
-
-// Set the class name
-weaviate.WithClassName("Document")
-
-// Set the organization ID for multi-tenancy
-weaviate.WithOrgID("org-123")
-```
-
 ### Pinecone Options
 
 ```go
@@ -275,117 +237,3 @@ func (s *CustomVectorStore) Name() string {
 
 ## Using Vector Stores with Embeddings
 
-Vector stores typically work with embedding models to convert text to vectors:
-
-```go
-import (
-    "context"
-    "github.com/tagus/agent-sdk-go/pkg/embedding"
-    "github.com/tagus/agent-sdk-go/pkg/embedding/openai"
-    "github.com/tagus/agent-sdk-go/pkg/interfaces"
-    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
-)
-
-// Create embedding model
-embedder := openai.NewEmbedder(cfg.Embedding.OpenAI.APIKey)
-
-// Create vector store with embedder
-store := weaviate.New(
-    cfg.VectorStore.Weaviate.URL,
-    weaviate.WithAPIKey(cfg.VectorStore.Weaviate.APIKey),
-    weaviate.WithEmbedder(embedder),
-)
-
-// Add documents (embeddings will be generated automatically)
-err := store.AddDocuments(context.Background(), docs)
-
-// Search (query will be embedded automatically)
-results, err := store.Search(context.Background(), "artificial intelligence")
-```
-
-## Example: Complete Vector Store Setup
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "log"
-
-    "github.com/tagus/agent-sdk-go/pkg/config"
-    "github.com/tagus/agent-sdk-go/pkg/embedding/openai"
-    "github.com/tagus/agent-sdk-go/pkg/interfaces"
-    "github.com/tagus/agent-sdk-go/pkg/vectorstore/weaviate"
-)
-
-func main() {
-    // Get configuration
-    cfg := config.Get()
-
-    // Create embedding model
-    embedder := openai.NewEmbedder(cfg.Embedding.OpenAI.APIKey)
-
-    // Create vector store
-    store := weaviate.New(
-        cfg.VectorStore.Weaviate.URL,
-        weaviate.WithAPIKey(cfg.VectorStore.Weaviate.APIKey),
-        weaviate.WithEmbedder(embedder),
-    )
-
-    // Create context
-    ctx := context.Background()
-
-    // Create documents
-    docs := []interfaces.Document{
-        {
-            ID:      "doc1",
-            Content: "Artificial intelligence (AI) is intelligence demonstrated by machines.",
-            Metadata: map[string]interface{}{
-                "source": "wikipedia",
-                "topic":  "AI",
-            },
-        },
-        {
-            ID:      "doc2",
-            Content: "Machine learning is a subset of artificial intelligence.",
-            Metadata: map[string]interface{}{
-                "source": "textbook",
-                "topic":  "ML",
-            },
-        },
-        {
-            ID:      "doc3",
-            Content: "Deep learning is a type of machine learning based on artificial neural networks.",
-            Metadata: map[string]interface{}{
-                "source": "research paper",
-                "topic":  "DL",
-            },
-        },
-    }
-
-    // Add documents to the vector store
-    err := store.AddDocuments(ctx, docs)
-    if err != nil {
-        log.Fatalf("Failed to add documents: %v", err)
-    }
-    fmt.Println("Added documents to vector store")
-
-    // Search for documents
-    results, err := store.Search(
-        ctx,
-        "What is artificial intelligence?",
-        interfaces.WithLimit(2),
-    )
-    if err != nil {
-        log.Fatalf("Failed to search documents: %v", err)
-    }
-
-    // Print search results
-    fmt.Println("Search results:")
-    for i, result := range results {
-        fmt.Printf("%d. Document ID: %s (Score: %.4f)\n", i+1, result.ID, result.Score)
-        fmt.Printf("   Content: %s\n", result.Content)
-        fmt.Printf("   Metadata: %v\n", result.Metadata)
-    }
-}

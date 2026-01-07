@@ -79,15 +79,7 @@ agent.WithMemory(mem)
 
 ### Vector Stores
 
-Vector stores can be partitioned by organization:
-
-```go
-// Create a vector store with organization isolation
-vectorStore := weaviate.New(
-    cfg.VectorStore.Weaviate.URL,
-    weaviate.WithOrgID("org-123"),
-)
-```
+Vector stores can be partitioned by organization.
 
 ### Data Stores
 

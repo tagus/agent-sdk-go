@@ -6,7 +6,7 @@ This example demonstrates advanced usage of the embedding functionality in the A
 
 - Custom embedding configuration with specified dimensions
 - Rich document metadata for advanced filtering
-- Weaviate vector store integration
+- Vector store integration
 - Advanced metadata filtering with complex queries
 - Similarity calculation between embeddings
 - Batch embedding for efficient processing
@@ -16,7 +16,7 @@ This example demonstrates advanced usage of the embedding functionality in the A
 ### Prerequisites
 
 - Set the `OPENAI_API_KEY` environment variable with your OpenAI API key
-- Configure Weaviate connection details in your configuration
+- Configure vector store connection details in your configuration
 
 ```bash
 export OPENAI_API_KEY=your_openai_api_key
@@ -44,14 +44,8 @@ embedder := embedding.NewOpenAIEmbedderWithConfig(cfg.LLM.OpenAI.APIKey, embeddi
 ### Creating a Vector Store
 
 ```go
-store := weaviate.New(
-    &interfaces.VectorStoreConfig{
-        Host:   cfg.VectorStore.Weaviate.Host,
-        APIKey: cfg.VectorStore.Weaviate.APIKey,
-    },
-    weaviate.WithClassPrefix("AdvancedDoc"),
-    weaviate.WithEmbedder(embedder),
-)
+// Example with Pinecone or another vector store implementation
+// Refer to vector store specific documentation
 ```
 
 ### Creating Documents with Rich Metadata
@@ -120,11 +114,11 @@ filterGroup := embedding.NewMetadataFilterGroup("and",
     embedding.NewMetadataFilter("type", "=", "quote"),
 )
 
-weaviateFilters := embedding.FilterToWeaviateFormat(filterGroup)
+filters := embedding.FilterToMap(filterGroup)
 
 results, err = store.Search(ctx, "question", 5,
     interfaces.WithEmbedding(true),
-    interfaces.WithFilters(weaviateFilters),
+    interfaces.WithFilters(filters),
 )
 ```
 
@@ -162,13 +156,6 @@ filterGroup := embedding.NewMetadataFilterGroup("and",
     embedding.NewMetadataFilter("word_count", ">", 8),
     embedding.NewMetadataFilter("type", "=", "quote"),
 )
-```
-
-3. Weaviate-specific filter helpers:
-```go
-wordCountFilter := embedding.CreateWeaviateFilter("word_count", ">", 8)
-typeFilter := embedding.CreateWeaviateFilter("type", "=", "quote")
-combinedFilter := embedding.CreateWeaviateAndFilter(wordCountFilter, typeFilter)
 ```
 
 ### Similarity Metrics

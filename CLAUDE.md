@@ -52,7 +52,7 @@ Headless SDK with interactive chat, task execution, and MCP server management.
 
 - Requires Go 1.23+
 - Uses module `github.com/tagus/agent-sdk-go`
-- Key dependencies: OpenAI/Anthropic/Google clients, Redis, Weaviate, OpenTelemetry
+- Key dependencies: OpenAI/Anthropic/Google clients, Redis, OpenTelemetry
 
 ## Environment Configuration
 

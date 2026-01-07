@@ -32,14 +32,6 @@ This document lists all environment variables used by the Agent SDK.
 
 ## VectorStore Configuration
 
-### Weaviate
-
-- `WEAVIATE_URL`: Weaviate URL
-- `WEAVIATE_API_KEY`: Weaviate API key
-- `WEAVIATE_SCHEME`: Weaviate scheme (default: "http")
-- `WEAVIATE_HOST`: Weaviate host (default: "localhost:8080")
-- `WEAVIATE_CLASS_NAME`: Weaviate class name (default: "Document")
-
 ## DataStore Configuration
 
 ### Supabase

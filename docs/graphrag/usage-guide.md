@@ -1,5 +1,7 @@
 # GraphRAG Usage Guide
 
+> **Note**: The Weaviate-based GraphRAG implementation has been removed from this SDK. This document is retained for reference but the described implementation is no longer available.
+
 This guide covers how to use GraphRAG in the Agent SDK to build knowledge graph-powered agents.
 
 ## Prerequisites

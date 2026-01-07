@@ -77,7 +77,7 @@ const (
 
 // Config holds configuration for GraphRAG providers
 type Config struct {
-	// Provider is the backend provider ("weaviate", "neo4j")
+	// Provider is the backend provider
 	Provider string `json:"provider" yaml:"provider"`
 
 	// Host is the hostname of the backend server
@@ -99,7 +99,7 @@ type Config struct {
 // DefaultConfig returns a default configuration
 func DefaultConfig() *Config {
 	return &Config{
-		Provider:    "weaviate",
+		Provider:    "",
 		Host:        "localhost:8080",
 		Scheme:      "http",
 		ClassPrefix: "Graph",
