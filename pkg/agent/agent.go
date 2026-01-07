@@ -18,7 +18,6 @@ import (
 	"github.com/tagus/agent-sdk-go/pkg/memory"
 	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"github.com/tagus/agent-sdk-go/pkg/tools"
-	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 // LazyMCPConfig holds configuration for lazy MCP server initialization
@@ -56,7 +55,6 @@ type Agent struct {
 	tools                []interfaces.Tool
 	subAgents            []*Agent // Sub-agents that can be called as tools
 	orgID                string
-	tracer               interfaces.Tracer
 	guardrails           interfaces.Guardrails
 	logger               logging.Logger // Logger for the agent
 	systemPrompt         string
@@ -78,7 +76,6 @@ type Agent struct {
 	// Runtime configuration fields
 	memoryConfig   map[string]interface{} // Memory configuration from YAML
 	timeout        time.Duration          // Agent timeout from runtime config
-	tracingEnabled bool                   // Whether tracing is enabled
 	metricsEnabled bool                   // Whether metrics are enabled
 
 	// Remote agent fields
@@ -155,13 +152,6 @@ func deduplicateTools(tools []interfaces.Tool) []interfaces.Tool {
 func WithOrgID(orgID string) Option {
 	return func(a *Agent) {
 		a.orgID = orgID
-	}
-}
-
-// WithTracer sets the tracer for the agent
-func WithTracer(tracer interfaces.Tracer) Option {
-	return func(a *Agent) {
-		a.tracer = tracer
 	}
 }
 
@@ -337,10 +327,8 @@ func WithAgentConfig(config AgentConfig, variables map[string]string) Option {
 					a.timeout = timeout
 				}
 			}
-			if expandedConfig.Runtime.EnableTracing != nil && *expandedConfig.Runtime.EnableTracing {
-				// Tracing enablement flag stored for later use
-				a.tracingEnabled = true
-			}
+
+			// Check if metrics are enabled
 			if expandedConfig.Runtime.EnableMetrics != nil && *expandedConfig.Runtime.EnableMetrics {
 				// Metrics enablement flag stored for later use
 				a.metricsEnabled = true
@@ -363,7 +351,7 @@ func WithAgentConfig(config AgentConfig, variables map[string]string) Option {
 				}
 			}
 
-			subAgents, err := createSubAgentsFromConfig(expandedConfig.SubAgents, mergedVariables, a.llm, a.memory, a.tracer, a.logger)
+			subAgents, err := createSubAgentsFromConfig(expandedConfig.SubAgents, mergedVariables, a.llm, a.memory, a.logger)
 			if err != nil {
 				// Log error but don't fail agent creation
 				if a.logger != nil {
@@ -378,12 +366,9 @@ func WithAgentConfig(config AgentConfig, variables map[string]string) Option {
 				agentTools := make([]interfaces.Tool, 0, len(subAgents))
 				for _, subAgent := range subAgents {
 					agentTool := tools.NewAgentTool(subAgent)
-					// Pass logger and tracer if available on parent agent
+					// Pass logger if available on parent agent
 					if a.logger != nil {
 						agentTool = agentTool.WithLogger(a.logger)
-					}
-					if a.tracer != nil {
-						agentTool = agentTool.WithTracer(a.tracer)
 					}
 					agentTools = append(agentTools, agentTool)
 				}
@@ -538,7 +523,7 @@ func WithAgents(subAgents ...*Agent) Option {
 		for _, subAgent := range subAgents {
 			agentTool := tools.NewAgentTool(subAgent)
 
-			// Pass logger and tracer if available on parent agent
+			// Pass logger if available on parent agent
 			// Note: This will be set later in NewAgent after the agent is fully constructed
 			a.tools = append(a.tools, agentTool)
 		}
@@ -830,16 +815,8 @@ func (a *Agent) runInternal(ctx context.Context, input string, detailed bool) (*
 }
 
 func (a *Agent) runLocalWithTracking(ctx context.Context, input string) (string, error) {
-	ctx = tracing.WithAgentName(ctx, a.name)
-
 	if a.orgID != "" {
 		ctx = multitenancy.WithOrgID(ctx, a.orgID)
-	}
-
-	var span interfaces.Span
-	if a.tracer != nil {
-		ctx, span = a.tracer.StartSpan(ctx, "agent.Run")
-		defer span.End()
 	}
 
 	if a.memory != nil {
@@ -1724,9 +1701,6 @@ func (a *Agent) GetLogger() logging.Logger {
 }
 
 // GetTracer returns the tracer instance (for use in custom functions)
-func (a *Agent) GetTracer() interfaces.Tracer {
-	return a.tracer
-}
 
 // GetSystemPrompt returns the system prompt (for use in custom functions)
 func (a *Agent) GetSystemPrompt() string {
@@ -1738,10 +1712,7 @@ func (a *Agent) configureSubAgentTools() {
 	for _, tool := range a.tools {
 		// Check if this is an AgentTool by trying to cast it
 		if agentTool, ok := tool.(*tools.AgentTool); ok {
-			// Configure with parent agent's logger and tracer
-			if a.tracer != nil {
-				agentTool.WithTracer(a.tracer)
-			}
+			// Configure with parent agent's logger
 			if a.logger != nil {
 				agentTool.WithLogger(a.logger)
 			}
@@ -1861,7 +1832,7 @@ func (a *Agent) getAllToolsSync() []interfaces.Tool {
 }
 
 // createSubAgentsFromConfig recursively creates sub-agents from YAML configuration
-func createSubAgentsFromConfig(subAgentConfigs map[string]AgentConfig, variables map[string]string, llm interfaces.LLM, memory interfaces.Memory, tracer interfaces.Tracer, logger logging.Logger) ([]*Agent, error) {
+func createSubAgentsFromConfig(subAgentConfigs map[string]AgentConfig, variables map[string]string, llm interfaces.LLM, memory interfaces.Memory, logger logging.Logger) ([]*Agent, error) {
 	if len(subAgentConfigs) == 0 {
 		return nil, nil
 	}
@@ -1876,15 +1847,12 @@ func createSubAgentsFromConfig(subAgentConfigs map[string]AgentConfig, variables
 			WithName(name),
 		}
 
-		// Inherit infrastructure dependencies (LLM, memory, tracer, logger) but NOT tools
+		// Inherit infrastructure dependencies (LLM, memory, logger) but NOT tools
 		if llm != nil {
 			agentOptions = append(agentOptions, WithLLM(llm))
 		}
 		if memory != nil {
 			agentOptions = append(agentOptions, WithMemory(memory))
-		}
-		if tracer != nil {
-			agentOptions = append(agentOptions, WithTracer(tracer))
 		}
 		if logger != nil {
 			agentOptions = append(agentOptions, WithLogger(logger))

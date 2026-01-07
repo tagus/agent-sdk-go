@@ -3,14 +3,11 @@ package agent
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
 	"github.com/tagus/agent-sdk-go/pkg/interfaces"
-	"github.com/tagus/agent-sdk-go/pkg/memory"
 	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
-	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 // RunStream executes the agent with streaming response
@@ -47,12 +44,6 @@ func (a *Agent) runLocalStream(ctx context.Context, input string) (<-chan interf
 	go func() {
 		defer close(eventChan)
 
-		// Track execution start time
-		startTime := time.Now()
-
-		// Inject agent name into context for tracing span naming
-		ctx = tracing.WithAgentName(ctx, a.name)
-
 		// If orgID is set on the agent, add it to the context
 		if a.orgID != "" {
 			ctx = multitenancy.WithOrgID(ctx, a.orgID)
@@ -61,68 +52,6 @@ func (a *Agent) runLocalStream(ctx context.Context, input string) (<-chan interf
 		// Create usage tracker for detailed metrics collection
 		tracker := newUsageTracker(true)
 		ctx = withUsageTracker(ctx, tracker)
-
-		// Track response length for span logging
-		var responseLength int64
-
-		// Start tracing if available
-		var span interfaces.Span
-		if a.tracer != nil {
-			ctx, span = a.tracer.StartSpan(ctx, "agent.RunStream")
-			defer func() {
-				// Add detailed execution information to span before ending
-				if span != nil {
-					executionTimeMs := time.Since(startTime).Milliseconds()
-					tracker.setExecutionTime(executionTimeMs)
-
-					usage, execSummary, model := tracker.getResults()
-
-					// Add comprehensive span attributes
-					spanData := map[string]interface{}{
-						"agent_name":        a.name,
-						"execution_time_ms": executionTimeMs,
-						"input_length":      len(input),
-						"response_length":   responseLength,
-					}
-
-					// Add organization and conversation context if available
-					if orgID, err := multitenancy.GetOrgID(ctx); err == nil && orgID != "" {
-						spanData["org_id"] = orgID
-					}
-					if conversationID, ok := memory.GetConversationID(ctx); ok && conversationID != "" {
-						spanData["conversation_id"] = conversationID
-					}
-
-					// Add token usage if available
-					if usage != nil {
-						spanData["input_tokens"] = usage.InputTokens
-						spanData["output_tokens"] = usage.OutputTokens
-						spanData["total_tokens"] = usage.TotalTokens
-						spanData["reasoning_tokens"] = usage.ReasoningTokens
-					}
-
-					// Add execution summary if available
-					if execSummary != nil {
-						spanData["llm_calls"] = execSummary.LLMCalls
-						spanData["tool_calls"] = execSummary.ToolCalls
-						spanData["sub_agent_calls"] = execSummary.SubAgentCalls
-						spanData["used_tools"] = execSummary.UsedTools
-						spanData["used_sub_agents"] = execSummary.UsedSubAgents
-					}
-
-					// Add model information
-					if model != "" {
-						spanData["model_used"] = model
-					} else if a.llm != nil {
-						spanData["model_used"] = a.llm.Name()
-					}
-
-					// Log detailed execution information
-					log.Printf("[Agent] RunStream execution completed: %+v", spanData)
-				}
-				span.End()
-			}()
-		}
 
 		// Add user message to memory
 		if a.memory != nil {
@@ -246,8 +175,7 @@ func (a *Agent) runLocalStream(ctx context.Context, input string) (<-chan interf
 		}
 
 		// Run with streaming
-		length, err := a.runStreamingGeneration(ctx, processedInput, allTools, streamingLLM, eventChan)
-		responseLength = length
+		_, err := a.runStreamingGeneration(ctx, processedInput, allTools, streamingLLM, eventChan)
 		if err != nil {
 			eventChan <- interfaces.AgentStreamEvent{
 				Type:      interfaces.AgentEventError,

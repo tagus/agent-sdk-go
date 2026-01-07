@@ -23,7 +23,6 @@ import (
 	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"github.com/tagus/agent-sdk-go/pkg/tools/github"
 	"github.com/tagus/agent-sdk-go/pkg/tools/websearch"
-	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 const (
@@ -341,11 +340,6 @@ func runDirectAgent(directConfig *DirectExecutionConfig, mcpServers []MCPServerC
 	// Add lazy MCP configurations to the agent
 	if len(lazyMCPConfigs) > 0 {
 		agentOptions = append(agentOptions, agent.WithLazyMCPConfigs(lazyMCPConfigs))
-	}
-
-	// Add tracer if configured
-	if tracer := createTracer(); tracer != nil {
-		agentOptions = append(agentOptions, agent.WithTracer(tracer))
 	}
 
 	// Create and run agent
@@ -1637,10 +1631,7 @@ func createAgent(config *CLIConfig) *agent.Agent {
 
 	// Add tracing if enabled
 	if config.EnableTracing {
-		tracer := createTracer()
-		if tracer != nil {
-			options = append(options, agent.WithTracer(tracer))
-		}
+		// Tracing disabled - tracer functionality removed
 	}
 
 	agentInstance, err := agent.NewAgent(options...)
@@ -1766,28 +1757,6 @@ func createDynamicMCPTools(serverName string, allowedTools []string) []agent.Laz
 	}
 
 	return tools
-}
-
-func createTracer() interfaces.Tracer {
-	cfg := config.Get()
-
-	if cfg.Tracing.Langfuse.Enabled {
-		langfuseConfig := tracing.LangfuseConfig{
-			SecretKey:   cfg.Tracing.Langfuse.SecretKey,
-			PublicKey:   cfg.Tracing.Langfuse.PublicKey,
-			Host:        cfg.Tracing.Langfuse.Host,
-			Environment: cfg.Tracing.Langfuse.Environment,
-		}
-		tracer, err := tracing.NewLangfuseTracer(langfuseConfig)
-		if err != nil {
-			log.Printf("Failed to create Langfuse tracer: %v", err)
-			return nil
-		}
-		// Use the AsInterfaceTracer method to get interfaces.Tracer compatible adapter
-		return tracer.AsInterfaceTracer()
-	}
-
-	return nil
 }
 
 func createContext(config *CLIConfig) context.Context {

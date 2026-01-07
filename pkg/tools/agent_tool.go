@@ -9,7 +9,6 @@ import (
 
 	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 	"github.com/tagus/agent-sdk-go/pkg/logging"
-	"github.com/tagus/agent-sdk-go/pkg/tracing"
 )
 
 // Context keys for sub-agent metadata
@@ -32,7 +31,6 @@ type AgentTool struct {
 	description string
 	timeout     time.Duration
 	logger      logging.Logger
-	tracer      interfaces.Tracer
 }
 
 // SubAgent interface defines the minimal interface needed for a sub-agent
@@ -64,12 +62,6 @@ func (at *AgentTool) WithTimeout(timeout time.Duration) *AgentTool {
 // WithLogger sets a custom logger for the agent tool
 func (at *AgentTool) WithLogger(logger logging.Logger) *AgentTool {
 	at.logger = logger
-	return at
-}
-
-// WithTracer sets a custom tracer for the agent tool
-func (at *AgentTool) WithTracer(tracer interfaces.Tracer) *AgentTool {
-	at.tracer = tracer
 	return at
 }
 
@@ -117,31 +109,10 @@ func (at *AgentTool) Run(ctx context.Context, input string) (string, error) {
 	startTime := time.Now()
 	agentName := at.agent.GetName()
 
-	// Start tracing span if tracer is available
-	var span interfaces.Span
-	if at.tracer != nil {
-		ctx, span = at.tracer.StartSpan(ctx, fmt.Sprintf("sub_agent.%s", agentName))
-		defer span.End()
-
-		// Add span attributes
-		span.SetAttribute("sub_agent.name", agentName)
-		span.SetAttribute("sub_agent.input", input)
-		span.SetAttribute("sub_agent.tool_name", at.name)
-	}
-
-	// Add agent name to context for tracing
-	ctx = tracing.WithAgentName(ctx, agentName)
-
 	// Check recursion depth
 	depth := getRecursionDepth(ctx)
 	if depth > MaxRecursionDepth {
 		err := fmt.Errorf("maximum recursion depth %d exceeded (current: %d)", MaxRecursionDepth, depth)
-		if span != nil {
-			span.AddEvent("error", map[string]interface{}{
-				"error": err.Error(),
-			})
-			span.SetAttribute("sub_agent.error", err.Error())
-		}
 		at.logger.Error(ctx, "Sub-agent recursion depth exceeded", map[string]interface{}{
 			"sub_agent":       agentName,
 			"recursion_depth": depth,
@@ -194,7 +165,7 @@ func (at *AgentTool) Run(ctx context.Context, input string) (string, error) {
 
 	if forwarder, ok := ctx.Value(interfaces.StreamForwarderKey).(interfaces.StreamForwarder); ok && forwarder != nil {
 		// Use streaming to forward events to parent
-		result, streamErr := at.runWithStreaming(ctx, input, forwarder, span, agentName)
+		result, streamErr := at.runWithStreaming(ctx, input, forwarder, agentName)
 		if streamErr != nil {
 			err = streamErr
 		} else {
@@ -221,15 +192,6 @@ func (at *AgentTool) Run(ctx context.Context, input string) (string, error) {
 			"duration":  duration.String(),
 			"input":     input,
 		})
-
-		// Record error in span
-		if span != nil {
-			span.AddEvent("error", map[string]interface{}{
-				"error": err.Error(),
-			})
-			span.SetAttribute("sub_agent.error", err.Error())
-			span.SetAttribute("sub_agent.duration_ms", duration.Milliseconds())
-		}
 
 		return "", fmt.Errorf("sub-agent %s failed: %w", agentName, err)
 	}
@@ -266,28 +228,6 @@ func (at *AgentTool) Run(ctx context.Context, input string) (string, error) {
 	}
 
 	at.logger.Info(ctx, "Sub-agent execution completed with detailed tracking", executionDetails)
-
-	// Record detailed success information in span
-	if span != nil {
-		span.SetAttribute("sub_agent.response", response.Content)
-		span.SetAttribute("sub_agent.duration_ms", duration.Milliseconds())
-		span.SetAttribute("sub_agent.response_length", len(response.Content))
-		span.SetAttribute("sub_agent.success", true)
-		span.SetAttribute("sub_agent.agent_name", response.AgentName)
-		span.SetAttribute("sub_agent.model_used", response.Model)
-		span.SetAttribute("sub_agent.llm_calls", response.ExecutionSummary.LLMCalls)
-		span.SetAttribute("sub_agent.tool_calls", response.ExecutionSummary.ToolCalls)
-		span.SetAttribute("sub_agent.sub_agent_calls", response.ExecutionSummary.SubAgentCalls)
-		span.SetAttribute("sub_agent.execution_time_ms", response.ExecutionSummary.ExecutionTimeMs)
-
-		// Add token usage to span if available
-		if response.Usage != nil {
-			span.SetAttribute("sub_agent.input_tokens", response.Usage.InputTokens)
-			span.SetAttribute("sub_agent.output_tokens", response.Usage.OutputTokens)
-			span.SetAttribute("sub_agent.total_tokens", response.Usage.TotalTokens)
-			span.SetAttribute("sub_agent.reasoning_tokens", response.Usage.ReasoningTokens)
-		}
-	}
 
 	return response.Content, nil
 }
@@ -369,7 +309,7 @@ func withSubAgentContext(ctx context.Context, parentAgent, subAgentName string) 
 }
 
 // runWithStreaming runs the sub-agent with streaming and forwards events to the parent
-func (at *AgentTool) runWithStreaming(ctx context.Context, input string, forwarder interfaces.StreamForwarder, span interfaces.Span, agentName string) (string, error) {
+func (at *AgentTool) runWithStreaming(ctx context.Context, input string, forwarder interfaces.StreamForwarder, agentName string) (string, error) {
 	// Start streaming from the sub-agent
 	eventChan, err := at.agent.RunStream(ctx, input)
 	if err != nil {
@@ -406,15 +346,6 @@ func (at *AgentTool) runWithStreaming(ctx context.Context, input string, forward
 			at.logger.Error(ctx, "Sub-agent streaming error", map[string]interface{}{
 				"sub_agent": agentName,
 				"error":     event.Error.Error(),
-			})
-		}
-
-		// Add event to span if available
-		if span != nil {
-			span.AddEvent(fmt.Sprintf("sub_agent_%s", event.Type), map[string]interface{}{
-				"type":      string(event.Type),
-				"sub_agent": agentName,
-				"has_error": event.Error != nil,
 			})
 		}
 	}

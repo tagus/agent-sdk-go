@@ -40,11 +40,6 @@ func WithOrgID(orgID string) agent.Option {
 	return agent.WithOrgID(orgID)
 }
 
-// WithTracer sets the tracer for the agent
-func WithTracer(tracer interfaces.Tracer) agent.Option {
-	return agent.WithTracer(tracer)
-}
-
 // WithGuardrails sets the guardrails for the agent
 func WithGuardrails(guardrails interfaces.Guardrails) agent.Option {
 	return agent.WithGuardrails(guardrails)

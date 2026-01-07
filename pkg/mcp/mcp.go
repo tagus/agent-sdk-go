@@ -16,8 +16,6 @@ import (
 
 	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 	"github.com/tagus/agent-sdk-go/pkg/logging"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // MCPServerImpl is the implementation of interfaces.MCPServer using the official SDK
@@ -26,35 +24,6 @@ type MCPServerImpl struct {
 	logger       logging.Logger
 	serverInfo   *interfaces.MCPServerInfo
 	capabilities *interfaces.MCPServerCapabilities
-}
-
-const TraceParentAttribute = "traceparent"
-
-func tracingMiddleware(h mcp.MethodHandler) mcp.MethodHandler {
-	return func(ctx context.Context, method string, req mcp.Request) (result mcp.Result, err error) {
-		// Add tracing information to the request metadata for tools/call method
-		if method == "tools/call" {
-			spanCtx := trace.SpanContextFromContext(ctx)
-			if !spanCtx.IsValid() {
-				// No tracing context available
-				return h(ctx, method, req)
-			}
-			propagator := propagation.TraceContext{}
-			headers := make(http.Header)
-			propagator.Inject(ctx, propagation.HeaderCarrier(headers))
-			traceparentValue := headers.Get(TraceParentAttribute)
-			if rp, ok := req.GetParams().(mcp.RequestParams); ok {
-				if rp.GetMeta() == nil {
-					rp.SetMeta(map[string]any{
-						TraceParentAttribute: traceparentValue,
-					})
-				} else {
-					rp.GetMeta()[TraceParentAttribute] = traceparentValue
-				}
-			}
-		}
-		return h(ctx, method, req)
-	}
 }
 
 // convertMCPCapabilities converts mcp.ServerCapabilities to interfaces.MCPServerCapabilities
@@ -98,8 +67,6 @@ func NewMCPServer(ctx context.Context, transport mcp.Transport) (interfaces.MCPS
 		Version: "0.0.0",
 	}, nil)
 
-	// Add tracing middleware to the client
-	client.AddSendingMiddleware(tracingMiddleware)
 	// Connect to the server using the transport
 	session, err := client.Connect(ctx, transport, nil)
 	if err != nil {
@@ -809,8 +776,6 @@ func NewStdioServerWithRetry(ctx context.Context, config StdioServerConfig, retr
 		Version: "0.0.0",
 	}, nil)
 
-	// Add tracing middleware to the client
-	client.AddSendingMiddleware(tracingMiddleware)
 	// Connect to the server using the transport
 	session, err := client.Connect(ctx, transport, nil)
 	if err != nil {
@@ -941,9 +906,6 @@ func NewHTTPServerWithRetry(ctx context.Context, config HTTPServerConfig, retryC
 		Name:    "agent-sdk-go",
 		Version: "0.0.0",
 	}, nil)
-
-	// Add tracing middleware to the client
-	client.AddSendingMiddleware(tracingMiddleware)
 
 	httpClient := http.DefaultClient
 

@@ -6,17 +6,15 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-	"time"
 
+	"github.com/openai/openai-go/v2"
+	"github.com/openai/openai-go/v2/option"
+	"github.com/openai/openai-go/v2/shared"
 	"github.com/tagus/agent-sdk-go/pkg/interfaces"
 	"github.com/tagus/agent-sdk-go/pkg/llm"
 	"github.com/tagus/agent-sdk-go/pkg/logging"
 	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
 	"github.com/tagus/agent-sdk-go/pkg/retry"
-	"github.com/tagus/agent-sdk-go/pkg/tracing"
-	"github.com/openai/openai-go/v2"
-	"github.com/openai/openai-go/v2/option"
-	"github.com/openai/openai-go/v2/shared"
 )
 
 // Define a custom type for context keys to avoid collisions
@@ -792,32 +790,12 @@ func (c *OpenAIClient) GenerateWithTools(ctx context.Context, prompt string, too
 					})
 				}
 
-				// Add to tracing context
-				toolCallTrace := tracing.ToolCall{
-					Name:       toolCall.Function.Name,
-					Arguments:  toolCall.Function.Arguments,
-					ID:         toolCall.ID,
-					Timestamp:  time.Now().Format(time.RFC3339),
-					StartTime:  time.Now(),
-					Duration:   0,
-					DurationMs: 0,
-					Error:      fmt.Sprintf("tool not found: %s", toolCall.Function.Name),
-					Result:     errorMessage,
-				}
-
-				tracing.AddToolCallToContext(ctx, toolCallTrace)
-
-				// Add error message as tool response
-				messages = append(messages, openai.ToolMessage(errorMessage, toolCall.ID))
-
 				continue // Continue processing other tool calls
 			}
 
 			// Execute the tool
 			c.logger.Info(ctx, "Executing tool", map[string]interface{}{"toolName": selectedTool.Name()})
-			toolStartTime := time.Now()
 			toolResult, err := selectedTool.Execute(ctx, toolCall.Function.Arguments)
-			toolEndTime := time.Now()
 
 			// Check for repetitive calls and add warning if needed
 			cacheKey := toolCall.Function.Name + ":" + toolCall.Function.Arguments
@@ -840,19 +818,6 @@ func (c *OpenAIClient) GenerateWithTools(ctx context.Context, prompt string, too
 				})
 			}
 
-			// Add tool call to tracing context
-			executionDuration := toolEndTime.Sub(toolStartTime)
-			toolCallTrace := tracing.ToolCall{
-				Name:       toolCall.Function.Name,
-				Arguments:  toolCall.Function.Arguments,
-				ID:         toolCall.ID,
-				Timestamp:  toolStartTime.Format(time.RFC3339),
-				StartTime:  toolStartTime,
-				Duration:   executionDuration,
-				DurationMs: executionDuration.Milliseconds(),
-			}
-
-			// Store tool call and result in memory if provided
 			if params.Memory != nil {
 				if err != nil {
 					// Store failed tool call result
@@ -897,18 +862,12 @@ func (c *OpenAIClient) GenerateWithTools(ctx context.Context, prompt string, too
 
 			if err != nil {
 				c.logger.Error(ctx, "Error executing tool", map[string]interface{}{"toolName": selectedTool.Name(), "error": err.Error()})
-				toolCallTrace.Error = err.Error()
-				toolCallTrace.Result = fmt.Sprintf("Error: %v", err)
 				// Add error message as tool response
 				messages = append(messages, openai.ToolMessage(fmt.Sprintf("Error: %v", err), toolCall.ID))
 			} else {
-				toolCallTrace.Result = toolResult
 				// Add tool result to messages
 				messages = append(messages, openai.ToolMessage(toolResult, toolCall.ID))
 			}
-
-			// Add the tool call to the tracing context
-			tracing.AddToolCallToContext(ctx, toolCallTrace)
 		}
 
 		// Continue to the next iteration with updated messages
