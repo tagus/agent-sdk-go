@@ -917,9 +917,8 @@ func NewHTTPServerWithRetry(ctx context.Context, config HTTPServerConfig, retryC
 
 	httpClient := http.DefaultClient
 
-	// Handle token-based authentication
-	if config.Token != "" {
-		// Fallback to legacy token-based authentication
+	// Handle token/api-key based authentication
+	if config.Token != "" || config.ApiKey != "" {
 		httpClient = customHTTPClient(config.Token, config.ApiKey)
 	}
 
