@@ -119,6 +119,8 @@ func (c *OpenAIClient) GenerateStream(
 		}
 
 		includeThinking := params.StreamConfig == nil || params.StreamConfig.IncludeThinking
+		var reasoningTextSent bool
+		var reasoningSummarySent bool
 		var usageMetadata map[string]interface{}
 
 		for stream.Next() {
@@ -158,13 +160,18 @@ func (c *OpenAIClient) GenerateStream(
 							"content_index": reasoning.ContentIndex,
 						},
 					}
+					reasoningTextSent = true
 				}
 			case "response.reasoning_text.done":
 				if includeThinking {
 					reasoning := event.AsResponseReasoningTextDone()
+					content := reasoning.Text
+					if reasoningTextSent {
+						content = ""
+					}
 					eventChan <- interfaces.StreamEvent{
 						Type:      interfaces.StreamEventThinking,
-						Content:   reasoning.Text,
+						Content:   content,
 						Timestamp: time.Now(),
 						Metadata: map[string]interface{}{
 							"output_index":  reasoning.OutputIndex,
@@ -185,13 +192,18 @@ func (c *OpenAIClient) GenerateStream(
 							"output_index":  summary.OutputIndex,
 						},
 					}
+					reasoningSummarySent = true
 				}
 			case "response.reasoning_summary_text.done":
 				if includeThinking {
 					summary := event.AsResponseReasoningSummaryTextDone()
+					content := summary.Text
+					if reasoningSummarySent {
+						content = ""
+					}
 					eventChan <- interfaces.StreamEvent{
 						Type:      interfaces.StreamEventThinking,
-						Content:   summary.Text,
+						Content:   content,
 						Timestamp: time.Now(),
 						Metadata: map[string]interface{}{
 							"summary_index": summary.SummaryIndex,
@@ -401,6 +413,8 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 
 			var usageMetadata map[string]interface{}
 			var receivedContent bool
+			var reasoningTextSent bool
+			var reasoningSummarySent bool
 
 			for stream.Next() {
 				event := stream.Current()
@@ -443,13 +457,18 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 								"iteration":     iteration + 1,
 							},
 						}
+						reasoningTextSent = true
 					}
 				case "response.reasoning_text.done":
 					if includeThinking {
 						reasoning := event.AsResponseReasoningTextDone()
+						content := reasoning.Text
+						if reasoningTextSent {
+							content = ""
+						}
 						eventChan <- interfaces.StreamEvent{
 							Type:      interfaces.StreamEventThinking,
-							Content:   reasoning.Text,
+							Content:   content,
 							Timestamp: time.Now(),
 							Metadata: map[string]interface{}{
 								"output_index":  reasoning.OutputIndex,
@@ -472,13 +491,18 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 								"iteration":     iteration + 1,
 							},
 						}
+						reasoningSummarySent = true
 					}
 				case "response.reasoning_summary_text.done":
 					if includeThinking {
 						summary := event.AsResponseReasoningSummaryTextDone()
+						content := summary.Text
+						if reasoningSummarySent {
+							content = ""
+						}
 						eventChan <- interfaces.StreamEvent{
 							Type:      interfaces.StreamEventThinking,
-							Content:   summary.Text,
+							Content:   content,
 							Timestamp: time.Now(),
 							Metadata: map[string]interface{}{
 								"summary_index": summary.SummaryIndex,
