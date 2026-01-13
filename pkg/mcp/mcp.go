@@ -851,6 +851,7 @@ type HTTPServerConfig struct {
 	BaseURL      string
 	Path         string
 	Token        string
+	ApiKey       string
 	ProtocolType ServerProtocolType
 	Logger       logging.Logger
 
@@ -870,16 +871,22 @@ const (
 type customRoundTripper struct {
 	delegate http.RoundTripper
 	token    string
+	apiKey   string
 }
 
 // RoundTrip implements the http.RoundTripper interface
 func (rt *customRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("Authorization", "Bearer "+rt.token)
+	if rt.token != "" {
+		req.Header.Set("Authorization", "Bearer "+rt.token)
+	}
+	if rt.apiKey != "" {
+		req.Header.Set("api-key", rt.apiKey)
+	}
 	return rt.delegate.RoundTrip(req)
 }
 
 // customHTTPClient creates an HTTP client that adds the Authorization header to each request
-func customHTTPClient(token string) *http.Client {
+func customHTTPClient(token string, apiKey string) *http.Client {
 	return &http.Client{
 		Transport: &customRoundTripper{
 			delegate: http.DefaultTransport,
@@ -912,7 +919,7 @@ func NewHTTPServerWithRetry(ctx context.Context, config HTTPServerConfig, retryC
 	// Handle token-based authentication
 	if config.Token != "" {
 		// Fallback to legacy token-based authentication
-		httpClient = customHTTPClient(config.Token)
+		httpClient = customHTTPClient(config.Token, config.ApiKey)
 	}
 
 	var transport mcp.Transport

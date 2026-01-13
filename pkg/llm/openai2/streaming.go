@@ -350,9 +350,14 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 				if params.LLMConfig.TopP > 0 && !isReasoningModel(c.Model) {
 					req.TopP = param.NewOpt(params.LLMConfig.TopP)
 				}
-				if params.LLMConfig.Reasoning != "" {
-					req.Reasoning = shared.ReasoningParam{
-						Effort: shared.ReasoningEffort(params.LLMConfig.Reasoning),
+				if params.LLMConfig.Reasoning != "" || includeThinking {
+					req.Reasoning = shared.ReasoningParam{}
+					if params.LLMConfig.Reasoning != "" {
+						req.Reasoning.Effort = shared.ReasoningEffort(params.LLMConfig.Reasoning)
+					}
+					// Request reasoning summary when thinking is desired so we get reasoning_text deltas.
+					if includeThinking {
+						req.Reasoning.Summary = shared.ReasoningSummaryAuto
 					}
 				}
 			}
