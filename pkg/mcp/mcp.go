@@ -891,6 +891,7 @@ func customHTTPClient(token string, apiKey string) *http.Client {
 		Transport: &customRoundTripper{
 			delegate: http.DefaultTransport,
 			token:    token,
+			apiKey:   apiKey,
 		},
 	}
 }
