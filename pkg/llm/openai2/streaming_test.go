@@ -120,7 +120,8 @@ func TestGenerateWithToolsStream_UsesResponsesAndTools(t *testing.T) {
 	firstStream := "" +
 		"data: {\"type\":\"response.output_item.added\",\"item\":{\"type\":\"function_call\",\"id\":\"item1\",\"call_id\":\"call_1\",\"name\":\"echo\",\"arguments\":\"\"},\"output_index\":0}\n\n" +
 		"data: {\"type\":\"response.function_call_arguments.delta\",\"item_id\":\"item1\",\"delta\":\"{\\\"msg\\\":\\\"hi\\\"}\",\"output_index\":0}\n\n" +
-		"data: {\"type\":\"response.function_call_arguments.done\",\"item_id\":\"item1\",\"arguments\":\"\",\"output_index\":0}\n\n" +
+		// done repeats the same arguments; we should not duplicate them.
+		"data: {\"type\":\"response.function_call_arguments.done\",\"item_id\":\"item1\",\"arguments\":\"{\\\"msg\\\":\\\"hi\\\"}\",\"output_index\":0}\n\n" +
 		"data: {\"type\":\"response.completed\",\"response\":{\"usage\":{\"input_tokens\":5,\"output_tokens\":1,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":6,\"input_tokens_details\":{\"cached_tokens\":0}}}}\n\n"
 
 	secondStream := "" +
@@ -152,10 +153,12 @@ func TestGenerateWithToolsStream_UsesResponsesAndTools(t *testing.T) {
 	}
 
 	var sawToolUse, sawToolResult, sawContent bool
+	var toolArgs string
 	for ev := range stream {
 		switch ev.Type {
 		case interfaces.StreamEventToolUse:
 			sawToolUse = true
+			toolArgs = ev.ToolCall.Arguments
 		case interfaces.StreamEventToolResult:
 			sawToolResult = true
 		case interfaces.StreamEventContentDelta:
@@ -169,6 +172,9 @@ func TestGenerateWithToolsStream_UsesResponsesAndTools(t *testing.T) {
 
 	if !sawToolUse || !sawToolResult || !sawContent {
 		t.Fatalf("missing events toolUse=%v toolResult=%v content=%v", sawToolUse, sawToolResult, sawContent)
+	}
+	if toolArgs != `{"msg":"hi"}` {
+		t.Fatalf("unexpected tool args: %q", toolArgs)
 	}
 
 	transport.mu.Lock()

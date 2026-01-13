@@ -410,6 +410,7 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 				arguments strings.Builder
 			}
 			toolCalls := map[string]*toolCallState{}
+			toolCallHasDelta := map[string]bool{}
 
 			var usageMetadata map[string]interface{}
 			var receivedContent bool
@@ -524,11 +525,15 @@ func (c *OpenAIClient) GenerateWithToolsStream(
 					delta := event.AsResponseFunctionCallArgumentsDelta()
 					if tc, ok := toolCalls[delta.ItemID]; ok {
 						tc.arguments.WriteString(delta.Delta)
+						toolCallHasDelta[delta.ItemID] = true
 					}
 				case "response.function_call_arguments.done":
 					done := event.AsResponseFunctionCallArgumentsDone()
 					if tc, ok := toolCalls[done.ItemID]; ok {
-						tc.arguments.WriteString(done.Arguments)
+						// Some responses include the full arguments both in delta and done; avoid double appending.
+						if !toolCallHasDelta[done.ItemID] && tc.arguments.Len() == 0 {
+							tc.arguments.WriteString(done.Arguments)
+						}
 						eventChan <- interfaces.StreamEvent{
 							Type: interfaces.StreamEventToolUse,
 							ToolCall: &interfaces.ToolCall{
