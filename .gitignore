@@ -71,3 +71,5 @@ venv/
 *_mcp_server.json
 aws_api_server.json
 k8s_kubectl.json
+
+openai-v2/

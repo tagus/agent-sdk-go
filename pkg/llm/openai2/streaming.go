@@ -1,0 +1,870 @@
+package openai2
+
+import (
+	"context"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/openai/openai-go/v2"
+	"github.com/openai/openai-go/v2/packages/param"
+	"github.com/openai/openai-go/v2/responses"
+	"github.com/openai/openai-go/v2/shared"
+	"github.com/tagus/agent-sdk-go/pkg/interfaces"
+	"github.com/tagus/agent-sdk-go/pkg/multitenancy"
+)
+
+// GenerateStream implements interfaces.StreamingLLM.GenerateStream
+func (c *OpenAIClient) GenerateStream(
+	ctx context.Context,
+	prompt string,
+	options ...interfaces.GenerateOption,
+) (<-chan interfaces.StreamEvent, error) {
+	// Apply options
+	params := &interfaces.GenerateOptions{
+		LLMConfig: &interfaces.LLMConfig{
+			Temperature: 0.7,
+		},
+	}
+
+	for _, option := range options {
+		option(params)
+	}
+
+	// Check for organization ID in context
+	defaultOrgID := "default"
+	orgID := defaultOrgID
+	if id, err := multitenancy.GetOrgID(ctx); err == nil {
+		orgID = id
+		ctx = multitenancy.WithOrgID(ctx, id)
+	} else {
+		ctx = multitenancy.WithOrgID(ctx, defaultOrgID)
+	}
+
+	// Get buffer size from stream config
+	bufferSize := 100
+	if params.StreamConfig != nil {
+		bufferSize = params.StreamConfig.BufferSize
+	}
+
+	eventChan := make(chan interfaces.StreamEvent, bufferSize)
+
+	go func() {
+		defer close(eventChan)
+
+		builder := newMessageHistoryBuilder(c.logger)
+		inputItems := builder.buildResponseInputItems(ctx, prompt, params.Memory)
+
+		// Prepend system message when provided
+		if params.SystemMessage != "" {
+			inputItems = append([]responses.ResponseInputItemUnionParam{
+				responses.ResponseInputItemParamOfMessage(params.SystemMessage, responses.EasyInputMessageRoleSystem),
+			}, inputItems...)
+		}
+
+		// Ensure we always send at least the current prompt
+		if len(inputItems) == 0 {
+			inputItems = []responses.ResponseInputItemUnionParam{
+				responses.ResponseInputItemParamOfMessage(prompt, responses.EasyInputMessageRoleUser),
+			}
+		}
+
+		req := responses.ResponseNewParams{
+			Model: shared.ResponsesModel(c.Model),
+			Input: responses.ResponseNewParamsInputUnion{
+				OfInputItemList: responses.ResponseInputParam(inputItems),
+			},
+			User: param.NewOpt(orgID),
+		}
+
+		if params.LLMConfig != nil {
+			req.Temperature = param.NewOpt(c.getTemperatureForModel(params.LLMConfig.Temperature))
+			if params.LLMConfig.TopP > 0 && !isReasoningModel(c.Model) {
+				req.TopP = param.NewOpt(params.LLMConfig.TopP)
+			}
+
+			if params.LLMConfig.Reasoning != "" {
+				req.Reasoning = shared.ReasoningParam{
+					Effort: shared.ReasoningEffort(params.LLMConfig.Reasoning),
+				}
+			}
+		}
+
+		if params.ResponseFormat != nil {
+			jsonSchema := responses.ResponseFormatTextJSONSchemaConfigParam{
+				Name:   params.ResponseFormat.Name,
+				Schema: params.ResponseFormat.Schema,
+				Type:   "json_schema",
+			}
+
+			req.Text.Format = responses.ResponseFormatTextConfigUnionParam{
+				OfJSONSchema: &jsonSchema,
+			}
+		}
+
+		c.logger.Debug(ctx, "Creating OpenAI Responses streaming request", map[string]interface{}{
+			"model":       c.Model,
+			"temperature": params.LLMConfig.Temperature,
+			"top_p":       params.LLMConfig.TopP,
+			"reasoning":   params.LLMConfig.Reasoning,
+		})
+
+		stream := c.ResponseService.NewStreaming(ctx, req)
+
+		eventChan <- interfaces.StreamEvent{
+			Type:      interfaces.StreamEventMessageStart,
+			Timestamp: time.Now(),
+			Metadata: map[string]interface{}{
+				"model": c.Model,
+			},
+		}
+
+		includeThinking := params.StreamConfig == nil || params.StreamConfig.IncludeThinking
+		var usageMetadata map[string]interface{}
+
+		for stream.Next() {
+			event := stream.Current()
+
+			switch event.Type {
+			case "response.output_text.delta":
+				delta := event.AsResponseOutputTextDelta()
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventContentDelta,
+					Content:   delta.Delta,
+					Timestamp: time.Now(),
+					Metadata: map[string]interface{}{
+						"output_index":  delta.OutputIndex,
+						"content_index": delta.ContentIndex,
+					},
+				}
+			case "response.output_text.done":
+				done := event.AsResponseOutputTextDone()
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventContentComplete,
+					Timestamp: time.Now(),
+					Metadata: map[string]interface{}{
+						"output_index":  done.OutputIndex,
+						"content_index": done.ContentIndex,
+					},
+				}
+			case "response.reasoning_text.delta":
+				if includeThinking {
+					reasoning := event.AsResponseReasoningTextDelta()
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventThinking,
+						Content:   reasoning.Delta,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"output_index":  reasoning.OutputIndex,
+							"content_index": reasoning.ContentIndex,
+						},
+					}
+				}
+			case "response.reasoning_text.done":
+				if includeThinking {
+					reasoning := event.AsResponseReasoningTextDone()
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventThinking,
+						Content:   reasoning.Text,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"output_index":  reasoning.OutputIndex,
+							"content_index": reasoning.ContentIndex,
+							"final":         true,
+						},
+					}
+				}
+			case "response.reasoning_summary_text.delta":
+				if includeThinking {
+					summary := event.AsResponseReasoningSummaryTextDelta()
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventThinking,
+						Content:   summary.Delta,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"summary_index": summary.SummaryIndex,
+							"output_index":  summary.OutputIndex,
+						},
+					}
+				}
+			case "response.reasoning_summary_text.done":
+				if includeThinking {
+					summary := event.AsResponseReasoningSummaryTextDone()
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventThinking,
+						Content:   summary.Text,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"summary_index": summary.SummaryIndex,
+							"output_index":  summary.OutputIndex,
+							"final":         true,
+						},
+					}
+				}
+			case "response.completed":
+				completed := event.AsResponseCompleted()
+				if completed.Response.Usage.TotalTokens > 0 {
+					usageMetadata = map[string]interface{}{
+						"usage": map[string]interface{}{
+							"prompt_tokens":       completed.Response.Usage.InputTokens,
+							"completion_tokens":   completed.Response.Usage.OutputTokens,
+							"reasoning_tokens":    completed.Response.Usage.OutputTokensDetails.ReasoningTokens,
+							"total_tokens":        completed.Response.Usage.TotalTokens,
+							"cached_input_tokens": completed.Response.Usage.InputTokensDetails.CachedTokens,
+						},
+					}
+				}
+			case "error":
+				errEvent := event.AsError()
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventError,
+					Error:     fmt.Errorf("openai streaming error: %s", errEvent.Message),
+					Timestamp: time.Now(),
+					Metadata: map[string]interface{}{
+						"code": errEvent.Code,
+					},
+				}
+			}
+		}
+
+		if err := stream.Err(); err != nil {
+			c.logger.Error(ctx, "OpenAI streaming error", map[string]interface{}{
+				"error": err.Error(),
+				"model": c.Model,
+			})
+			eventChan <- interfaces.StreamEvent{
+				Type:      interfaces.StreamEventError,
+				Error:     fmt.Errorf("openai streaming error: %w", err),
+				Timestamp: time.Now(),
+			}
+			return
+		}
+
+		eventChan <- interfaces.StreamEvent{
+			Type:      interfaces.StreamEventMessageStop,
+			Timestamp: time.Now(),
+			Metadata:  usageMetadata,
+		}
+
+		c.logger.Debug(ctx, "Successfully completed OpenAI streaming request", map[string]interface{}{
+			"model": c.Model,
+		})
+	}()
+
+	return eventChan, nil
+}
+
+// GenerateWithToolsStream implements interfaces.StreamingLLM.GenerateWithToolsStream with iterative tool calling
+func (c *OpenAIClient) GenerateWithToolsStream(
+	ctx context.Context,
+	prompt string,
+	tools []interfaces.Tool,
+	options ...interfaces.GenerateOption,
+) (<-chan interfaces.StreamEvent, error) {
+	// Apply options
+	params := &interfaces.GenerateOptions{
+		LLMConfig: &interfaces.LLMConfig{
+			Temperature: 0.7,
+		},
+	}
+
+	for _, option := range options {
+		option(params)
+	}
+
+	// Set default max iterations if not provided
+	maxIterations := params.MaxIterations
+	if maxIterations == 0 {
+		maxIterations = 2
+	}
+
+	// Check for organization ID in context
+	defaultOrgID := "default"
+	if id, err := multitenancy.GetOrgID(ctx); err == nil {
+		ctx = multitenancy.WithOrgID(ctx, id)
+	} else {
+		ctx = multitenancy.WithOrgID(ctx, defaultOrgID)
+	}
+
+	// Get buffer size from stream config
+	bufferSize := 100
+	if params.StreamConfig != nil {
+		bufferSize = params.StreamConfig.BufferSize
+	}
+
+	// Create event channel
+	eventChan := make(chan interfaces.StreamEvent, bufferSize)
+
+	// Start streaming with iterative tool calling
+	go func() {
+		defer close(eventChan)
+
+		// Convert tools to OpenAI format
+		openaiTools := make([]openai.ChatCompletionToolUnionParam, len(tools))
+		for i, tool := range tools {
+			schema := c.convertToOpenAISchema(tool.Parameters())
+
+			openaiTools[i] = openai.ChatCompletionFunctionTool(shared.FunctionDefinitionParam{
+				Name:        tool.Name(),
+				Description: openai.String(tool.Description()),
+				Parameters:  schema,
+			})
+		}
+
+		// Build messages starting with system message if provided
+		messages := []openai.ChatCompletionMessageParamUnion{}
+		if params.SystemMessage != "" {
+			messages = append(messages, openai.SystemMessage(params.SystemMessage))
+			c.logger.Debug(ctx, "Using system message for tools", map[string]interface{}{"system_message": params.SystemMessage})
+		}
+
+		// Build messages using unified builder
+		builder := newMessageHistoryBuilder(c.logger)
+		messages = append(messages, builder.buildMessages(ctx, prompt, params.Memory)...)
+
+		// Send initial message start event
+		eventChan <- interfaces.StreamEvent{
+			Type:      interfaces.StreamEventMessageStart,
+			Timestamp: time.Now(),
+			Metadata: map[string]interface{}{
+				"model": c.Model,
+				"tools": len(openaiTools),
+			},
+		}
+
+		// Determine if we should filter intermediate content (for backward compatibility)
+		filterIntermediateContent := params.StreamConfig == nil || !params.StreamConfig.IncludeIntermediateMessages
+
+		// Track captured content for final iteration replay if filtering is enabled
+		var capturedContentEvents []interfaces.StreamEvent
+
+		// Track if we got a complete response (no tool calls)
+		gotCompleteResponse := false
+
+		// Iterative tool calling loop
+		for iteration := 0; iteration < maxIterations; iteration++ {
+			iterationHasContent := false
+			var iterationContentEvents []interfaces.StreamEvent
+			streamParams := openai.ChatCompletionNewParams{
+				Model:      openai.ChatModel(c.Model),
+				Messages:   messages,
+				Tools:      openaiTools,
+				ToolChoice: openai.ChatCompletionToolChoiceOptionUnionParam{OfAuto: openai.String("auto")},
+			}
+
+			// Reasoning models only support temperature=1 (default), so don't set it
+			if !isReasoningModel(c.Model) {
+				streamParams.Temperature = openai.Float(params.LLMConfig.Temperature)
+			}
+
+			// Handle reasoning models
+			if isReasoningModel(c.Model) || (params.LLMConfig != nil && params.LLMConfig.EnableReasoning) {
+				streamParams.StreamOptions = openai.ChatCompletionStreamOptionsParam{
+					IncludeUsage: openai.Bool(true),
+				}
+
+				if isReasoningModel(c.Model) {
+					c.logger.Debug(ctx, "Using reasoning model with built-in reasoning for tools", map[string]interface{}{
+						"model": c.Model,
+						"note":  "reasoning models have internal reasoning but don't expose raw thinking tokens in streaming",
+					})
+				} else {
+					c.logger.Debug(ctx, "Reasoning enabled for non-reasoning model with tools", map[string]interface{}{
+						"model": c.Model,
+						"note":  "reasoning tokens not supported for this model type",
+					})
+				}
+			}
+
+			// Add other LLM parameters
+			if params.LLMConfig != nil {
+				// Reasoning models don't support top_p parameter
+				if params.LLMConfig.TopP > 0 && !isReasoningModel(c.Model) {
+					streamParams.TopP = openai.Float(params.LLMConfig.TopP)
+				}
+				if params.LLMConfig.FrequencyPenalty != 0 {
+					streamParams.FrequencyPenalty = openai.Float(params.LLMConfig.FrequencyPenalty)
+				}
+				if params.LLMConfig.PresencePenalty != 0 {
+					streamParams.PresencePenalty = openai.Float(params.LLMConfig.PresencePenalty)
+				}
+				// Set reasoning effort for reasoning models
+				if isReasoningModel(c.Model) && params.LLMConfig.Reasoning != "" {
+					streamParams.ReasoningEffort = shared.ReasoningEffort(params.LLMConfig.Reasoning)
+					c.logger.Debug(ctx, "Setting reasoning effort for tools streaming", map[string]interface{}{"reasoning_effort": params.LLMConfig.Reasoning})
+				}
+			}
+
+			c.logger.Debug(ctx, "Creating OpenAI streaming request with tools", map[string]interface{}{
+				"model":         c.Model,
+				"tools":         len(openaiTools),
+				"temperature":   params.LLMConfig.Temperature,
+				"iteration":     iteration + 1,
+				"maxIterations": maxIterations,
+				"message_count": len(messages),
+			})
+
+			// Debug log messages array for second iteration
+			if iteration > 0 {
+				c.logger.Debug(ctx, "Messages array for iteration", map[string]interface{}{
+					"iteration":     iteration + 1,
+					"message_count": len(messages),
+				})
+				for i, msg := range messages {
+					c.logger.Debug(ctx, "Message details", map[string]interface{}{
+						"index": i,
+						"type":  fmt.Sprintf("%T", msg),
+					})
+				}
+			}
+
+			// Create stream
+			stream := c.ChatService.Completions.NewStreaming(ctx, streamParams)
+			if stream.Err() != nil {
+				c.logger.Error(ctx, "Failed to create OpenAI streaming", map[string]interface{}{
+					"error": stream.Err().Error(),
+				})
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventError,
+					Error:     fmt.Errorf("openai streaming error: %w", stream.Err()),
+					Timestamp: time.Now(),
+				}
+				return
+			}
+
+			// Track streaming state
+			var currentToolCall *interfaces.ToolCall
+			var toolCallBuffer strings.Builder
+			var assistantResponse openai.ChatCompletionMessage
+			var hasContent bool
+
+			// Process stream chunks
+			for stream.Next() {
+				chunk := stream.Current()
+
+				for _, choice := range chunk.Choices {
+					// Handle content
+					if choice.Delta.Content != "" {
+						hasContent = true
+						iterationHasContent = true
+						assistantResponse.Content += choice.Delta.Content
+
+						contentEvent := interfaces.StreamEvent{
+							Type:      interfaces.StreamEventContentDelta,
+							Content:   choice.Delta.Content,
+							Timestamp: time.Now(),
+							Metadata: map[string]interface{}{
+								"choice_index": choice.Index,
+								"iteration":    iteration + 1,
+							},
+						}
+
+						if filterIntermediateContent && len(openaiTools) > 0 && iteration < maxIterations-1 {
+							// Capture content for potential replay later
+							iterationContentEvents = append(iterationContentEvents, contentEvent)
+						} else {
+							// Stream content immediately
+							eventChan <- contentEvent
+						}
+					}
+
+					// Handle tool calls - OpenAI streams them incrementally
+					if len(choice.Delta.ToolCalls) > 0 {
+						for _, toolCall := range choice.Delta.ToolCalls {
+							if toolCall.Function.Name != "" || toolCall.Function.Arguments != "" {
+								// Check if this is a new tool call or continuation
+								if toolCall.Function.Name != "" {
+									// New tool call started
+									if currentToolCall != nil && toolCallBuffer.Len() > 0 {
+										// Finish previous tool call
+										currentToolCall.Arguments = toolCallBuffer.String()
+										eventChan <- interfaces.StreamEvent{
+											Type:      interfaces.StreamEventToolUse,
+											ToolCall:  currentToolCall,
+											Timestamp: time.Now(),
+										}
+									}
+
+									// Start new tool call
+									currentToolCall = &interfaces.ToolCall{
+										ID:   toolCall.ID,
+										Name: toolCall.Function.Name,
+									}
+									toolCallBuffer.Reset()
+
+									// Add to assistant response
+									assistantResponse.ToolCalls = append(assistantResponse.ToolCalls, openai.ChatCompletionMessageToolCallUnion{
+										ID:   toolCall.ID,
+										Type: "function",
+										Function: openai.ChatCompletionMessageFunctionToolCallFunction{
+											Name: toolCall.Function.Name,
+										},
+									})
+
+									c.logger.Debug(ctx, "Started new tool call", map[string]interface{}{
+										"tool_id":   toolCall.ID,
+										"tool_name": toolCall.Function.Name,
+									})
+								}
+
+								// Accumulate arguments
+								if toolCall.Function.Arguments != "" {
+									toolCallBuffer.WriteString(toolCall.Function.Arguments)
+									// Update the last tool call arguments
+									if len(assistantResponse.ToolCalls) > 0 {
+										lastIdx := len(assistantResponse.ToolCalls) - 1
+										assistantResponse.ToolCalls[lastIdx].Function.Arguments += toolCall.Function.Arguments
+									}
+								}
+							}
+						}
+					}
+
+					// Check for finish reason
+					if choice.FinishReason == "tool_calls" && currentToolCall != nil {
+						// Finish last tool call
+						currentToolCall.Arguments = toolCallBuffer.String()
+						eventChan <- interfaces.StreamEvent{
+							Type:      interfaces.StreamEventToolUse,
+							ToolCall:  currentToolCall,
+							Timestamp: time.Now(),
+							Metadata: map[string]interface{}{
+								"finish_reason": "tool_calls",
+								"iteration":     iteration + 1,
+							},
+						}
+						currentToolCall = nil
+						toolCallBuffer.Reset()
+
+						c.logger.Debug(ctx, "Finished tool calls", map[string]interface{}{
+							"finish_reason": choice.FinishReason,
+							"iteration":     iteration + 1,
+						})
+					}
+				}
+			}
+
+			// Check for stream error
+			if err := stream.Err(); err != nil {
+				c.logger.Error(ctx, "OpenAI streaming with tools error", map[string]interface{}{
+					"error": err.Error(),
+					"model": c.Model,
+				})
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventError,
+					Error:     fmt.Errorf("openai streaming error: %w", err),
+					Timestamp: time.Now(),
+				}
+				return
+			}
+
+			// Check if the model wants to use tools
+			if len(assistantResponse.ToolCalls) == 0 {
+				// No tool calls, we're done
+				if hasContent {
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventContentComplete,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"iteration": iteration + 1,
+						},
+					}
+				}
+				gotCompleteResponse = true
+				break // Exit the iteration loop
+			}
+
+			// The model wants to use tools
+			c.logger.Info(ctx, "Processing tool calls", map[string]interface{}{
+				"count":     len(assistantResponse.ToolCalls),
+				"iteration": iteration + 1,
+			})
+
+			// Debug log all tool calls in assistant response
+			for i, tc := range assistantResponse.ToolCalls {
+				c.logger.Debug(ctx, "Assistant tool call", map[string]interface{}{
+					"index":     i,
+					"id":        tc.ID,
+					"id_length": len(tc.ID),
+					"name":      tc.Function.Name,
+					"args_len":  len(tc.Function.Arguments),
+				})
+			}
+
+			// Add the assistant's message with tool calls to the conversation
+			assistantResponse.Role = "assistant"
+			messages = append(messages, assistantResponse.ToParam())
+
+			// Process each tool call
+			for _, toolCall := range assistantResponse.ToolCalls {
+				// Find the matching tool
+				var foundTool interfaces.Tool
+				for _, tool := range tools {
+					if tool.Name() == toolCall.Function.Name {
+						foundTool = tool
+						break
+					}
+				}
+
+				if foundTool == nil {
+					c.logger.Error(ctx, "Tool not found", map[string]interface{}{
+						"tool_name": toolCall.Function.Name,
+					})
+					continue
+				}
+
+				// Execute the tool
+				result, err := foundTool.Execute(ctx, toolCall.Function.Arguments)
+				if err != nil {
+					c.logger.Error(ctx, "Tool execution error", map[string]interface{}{
+						"tool_name": toolCall.Function.Name,
+						"error":     err.Error(),
+					})
+					result = fmt.Sprintf("Error executing tool: %v", err)
+				}
+
+				// Send tool result event
+				eventChan <- interfaces.StreamEvent{
+					Type:      interfaces.StreamEventToolResult,
+					Timestamp: time.Now(),
+					ToolCall: &interfaces.ToolCall{
+						ID:        toolCall.ID,
+						Name:      toolCall.Function.Name,
+						Arguments: toolCall.Function.Arguments,
+					},
+					Metadata: map[string]interface{}{
+						"iteration": iteration + 1,
+						"result":    result,
+					},
+				}
+
+				// Add the tool result to the conversation
+				c.logger.Debug(ctx, "Adding tool result to conversation", map[string]interface{}{
+					"tool_call_id":  toolCall.ID,
+					"id_length":     len(toolCall.ID),
+					"tool_name":     toolCall.Function.Name,
+					"result_length": len(result),
+				})
+
+				// Ensure tool call ID is not swapped with result
+				if len(toolCall.ID) > 40 {
+					c.logger.Error(ctx, "Tool call ID too long", map[string]interface{}{
+						"id":        toolCall.ID,
+						"id_length": len(toolCall.ID),
+					})
+					continue
+				}
+
+				// Create tool message - correct parameter order: content first, then tool_call_id
+				toolMessage := openai.ToolMessage(result, toolCall.ID)
+				c.logger.Debug(ctx, "Created tool message", map[string]interface{}{
+					"message_type": "tool",
+				})
+				messages = append(messages, toolMessage)
+			}
+
+			// If we had content during this iteration and tools were called, capture it for final replay
+			if filterIntermediateContent && iterationHasContent && len(assistantResponse.ToolCalls) > 0 {
+				capturedContentEvents = append(capturedContentEvents, iterationContentEvents...)
+			}
+		}
+
+		// Replay captured content events if we filtered them during iterations
+		if filterIntermediateContent && len(capturedContentEvents) > 0 {
+			c.logger.Debug(ctx, "Replaying captured content events from tool iterations", map[string]interface{}{
+				"eventsCount": len(capturedContentEvents),
+			})
+			for _, contentEvent := range capturedContentEvents {
+				eventChan <- contentEvent
+			}
+		}
+
+		// If we got a complete response (no tool calls), skip the final synthesis call
+		if gotCompleteResponse {
+			c.logger.Debug(ctx, "Skipping final synthesis call - already got complete response", map[string]interface{}{
+				"maxIterations": maxIterations,
+			})
+			eventChan <- interfaces.StreamEvent{
+				Type:      interfaces.StreamEventMessageStop,
+				Timestamp: time.Now(),
+			}
+			return
+		}
+
+		// Final call without tools to get synthesis
+		c.logger.Info(ctx, "Maximum iterations reached, making final call without tools", map[string]interface{}{
+			"maxIterations": maxIterations,
+		})
+
+		// Add explicit message to inform LLM this is the final call
+		finalMessages := append(messages, openai.UserMessage("Please provide your final response based on the information available. Do not request any additional tools."))
+
+		// Create final request without tools
+		finalStreamParams := openai.ChatCompletionNewParams{
+			Model:    openai.ChatModel(c.Model),
+			Messages: finalMessages,
+		}
+
+		// Reasoning models only support temperature=1 (default), so don't set it
+		if !isReasoningModel(c.Model) {
+			finalStreamParams.Temperature = openai.Float(params.LLMConfig.Temperature)
+		}
+
+		// Add structured output if specified
+		if params.ResponseFormat != nil {
+			jsonSchema := shared.ResponseFormatJSONSchemaJSONSchemaParam{
+				Name:   params.ResponseFormat.Name,
+				Schema: params.ResponseFormat.Schema,
+			}
+
+			finalStreamParams.ResponseFormat = openai.ChatCompletionNewParamsResponseFormatUnion{
+				OfJSONSchema: &shared.ResponseFormatJSONSchemaParam{
+					Type:       "json_schema",
+					JSONSchema: jsonSchema,
+				},
+			}
+		}
+
+		// Add other parameters
+		if params.LLMConfig != nil {
+			// Reasoning models don't support top_p parameter
+			if params.LLMConfig.TopP > 0 && !isReasoningModel(c.Model) {
+				finalStreamParams.TopP = openai.Float(params.LLMConfig.TopP)
+			}
+			if params.LLMConfig.FrequencyPenalty != 0 {
+				finalStreamParams.FrequencyPenalty = openai.Float(params.LLMConfig.FrequencyPenalty)
+			}
+			if params.LLMConfig.PresencePenalty != 0 {
+				finalStreamParams.PresencePenalty = openai.Float(params.LLMConfig.PresencePenalty)
+			}
+			// Set reasoning effort for reasoning models
+			if isReasoningModel(c.Model) && params.LLMConfig.Reasoning != "" {
+				finalStreamParams.ReasoningEffort = shared.ReasoningEffort(params.LLMConfig.Reasoning)
+				c.logger.Debug(ctx, "Setting reasoning effort for final call", map[string]interface{}{"reasoning_effort": params.LLMConfig.Reasoning})
+			}
+		}
+
+		c.logger.Debug(ctx, "Making final streaming call without tools", map[string]interface{}{
+			"model": c.Model,
+		})
+
+		// Create final stream
+		finalStream := c.ChatService.Completions.NewStreaming(ctx, finalStreamParams)
+		if finalStream.Err() != nil {
+			c.logger.Error(ctx, "Error in final streaming call without tools", map[string]interface{}{
+				"error": finalStream.Err().Error(),
+			})
+			eventChan <- interfaces.StreamEvent{
+				Type:      interfaces.StreamEventError,
+				Error:     fmt.Errorf("openai final streaming error: %w", finalStream.Err()),
+				Timestamp: time.Now(),
+			}
+			return
+		}
+
+		// Track final content for memory storage
+		var finalContent strings.Builder
+
+		// Process final stream
+		for finalStream.Next() {
+			chunk := finalStream.Current()
+
+			for _, choice := range chunk.Choices {
+				// Handle final content
+				if choice.Delta.Content != "" {
+					finalContent.WriteString(choice.Delta.Content)
+					eventChan <- interfaces.StreamEvent{
+						Type:      interfaces.StreamEventContentDelta,
+						Content:   choice.Delta.Content,
+						Timestamp: time.Now(),
+						Metadata: map[string]interface{}{
+							"choice_index": choice.Index,
+							"final_call":   true,
+						},
+					}
+				}
+
+				// Check for finish reason
+				if choice.FinishReason != "" {
+					eventChan <- interfaces.StreamEvent{
+						Type: interfaces.StreamEventContentComplete,
+						Metadata: map[string]interface{}{
+							"finish_reason": choice.FinishReason,
+							"choice_index":  choice.Index,
+							"final_call":    true,
+						},
+						Timestamp: time.Now(),
+					}
+				}
+			}
+		}
+
+		// Check for final stream error
+		if err := finalStream.Err(); err != nil {
+			c.logger.Error(ctx, "OpenAI final streaming error", map[string]interface{}{
+				"error": err.Error(),
+				"model": c.Model,
+			})
+			eventChan <- interfaces.StreamEvent{
+				Type:      interfaces.StreamEventError,
+				Error:     fmt.Errorf("openai final streaming error: %w", err),
+				Timestamp: time.Now(),
+			}
+			return
+		}
+
+		// Send final message stop event
+		eventChan <- interfaces.StreamEvent{
+			Type:      interfaces.StreamEventMessageStop,
+			Timestamp: time.Now(),
+		}
+
+		c.logger.Debug(ctx, "Successfully completed OpenAI streaming request with tools", map[string]interface{}{
+			"model": c.Model,
+		})
+	}()
+
+	return eventChan, nil
+}
+
+// convertToOpenAISchema converts tool parameters to OpenAI function schema
+func (c *OpenAIClient) convertToOpenAISchema(params map[string]interfaces.ParameterSpec) map[string]interface{} {
+	properties := make(map[string]interface{})
+	required := []string{}
+
+	for name, param := range params {
+		property := map[string]interface{}{
+			"type":        param.Type,
+			"description": param.Description,
+		}
+
+		if param.Default != nil {
+			property["default"] = param.Default
+		}
+
+		if param.Items != nil {
+			property["items"] = map[string]interface{}{
+				"type": param.Items.Type,
+			}
+			if param.Items.Enum != nil {
+				property["items"].(map[string]interface{})["enum"] = param.Items.Enum
+			}
+		}
+
+		if param.Enum != nil {
+			property["enum"] = param.Enum
+		}
+
+		properties[name] = property
+
+		if param.Required {
+			required = append(required, name)
+		}
+	}
+
+	return map[string]interface{}{
+		"type":       "object",
+		"properties": properties,
+		"required":   required,
+	}
+}
