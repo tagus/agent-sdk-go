@@ -46,6 +46,8 @@ Join our Discord server to collaborate, share what you're building, and get comm
 - Go 1.23+
 - Redis (optional, for distributed memory)
 
+
+
 ### Installation
 
 #### As a Go Library
