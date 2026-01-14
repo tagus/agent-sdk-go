@@ -73,3 +73,6 @@ aws_api_server.json
 k8s_kubectl.json
 
 openai-v2/
+
+.cache
+.gocache
